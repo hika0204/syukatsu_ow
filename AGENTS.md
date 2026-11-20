@@ -23,6 +23,7 @@
 |---|---|
 | メモを追加・変更 | `python3 tools/ow_data.py memo <フォルダ名> <メモ>`。メモは普通の文章。装飾はつけない |
 | ランク変更 | `python3 tools/ow_data.py rank <フォルダ名> <A〜E>` |
+| 企業追加(調査メモ付き) | MHTML を置いて `add` したあと、勤務地・初任給・財務・年間休日の4つの md に同じ形式で行を足して `import-md`。詳しいメモは `調査メモ/` に置く。市場区分は `MARKET` に追加 |
 | 企業追加・数値更新 | MHTML を `<ランク>_<英語名>/` に置いて `python3 tools/ow_data.py add <フォルダ名>` |
 | 勤務地の修正 | `勤務地_GoogleMaps.md` を直して `python3 tools/ow_data.py import-md` |
 | 年間休日の修正 | `年間休日.md` の「根拠URL」の節を直して `python3 tools/ow_data.py import-md`(企業名は括弧部分を除いて突き合わせる) |

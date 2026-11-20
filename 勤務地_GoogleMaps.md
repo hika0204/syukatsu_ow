@@ -103,3 +103,10 @@
 - [PIVOT採用情報](https://pivot.jp/recruitment/)
 - [テクノプロ・デザイン社新卒勤務地](https://www.technopro.com/design/recruit_cp/newgraduate/entry/applicationrequirements2028/)
 - [日立Design Studio求人（サピアタワー）](https://www.r-agent.com/viewjob/jk0ee3ca3d366beece/)
+
+## 追加（アイシン・東海理化）
+
+| 企業 | 想定出勤先 | 住所 | 確度 | 補足 | Googleマップ |
+|---|---|---|:---:|---|---|
+| 株式会社アイシン（自動車部品） | **岡崎地区 LBSセンター** | 愛知県岡崎市岡町字原山6番地18 | ◎ | 2026年の公式インターンで車載ナビのUX/UI関連テーマの開催地。刈谷本社も候補。新卒の配属保証はない | [地図](https://www.google.com/maps/search/?api=1&query=愛知県岡崎市岡町字原山6番地18) |
+| 株式会社東海理化電機製作所 | **本社・本社工場（大口町）** | 愛知県丹羽郡大口町豊田三丁目260番地 | ○ | HMI製品開発・UX評価の拠点。名古屋市中村区にも開発オフィスがある。新卒UI/UX専用枠・配属は未確認 | [地図](https://www.google.com/maps/search/?api=1&query=愛知県丹羽郡大口町豊田三丁目260番地) |
