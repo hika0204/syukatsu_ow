@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>OW 企業比較</title>
+<style>
+:root{
+  --blue:#1B7FBE; --link:#166C9D; --badge:#368FCE; --bar:#61A3CE;
+  --line:#D6DFE5; --bg-light:#F2F6FA; --bg-light2:#EDF2F6; --th:#F5F5F5;
+  --gray:#777; --text:#000; --star:#F07F37; --best:#E3F0FA;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg-light2);color:var(--text);
+  font-family:"Hiragino Sans","ヒラギノ角ゴシック","Hiragino Kaku Gothic ProN","ヒラギノ角ゴ ProN W3",メイリオ,Meiryo,sans-serif;
+  font-size:13px;line-height:1.666}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+header{background:#fff;border-bottom:1px solid var(--line);height:52px;display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:20}
+header .logo{font-weight:bold;font-size:18px;color:var(--blue);letter-spacing:.02em}
+header .sub{color:var(--gray);font-size:12px}
+.layout{display:flex;align-items:flex-start}
+aside{width:250px;flex-shrink:0;background:#fff;border-right:1px solid var(--line);height:calc(100vh - 52px);position:sticky;top:52px;overflow:auto;padding:14px}
+aside h3{font-size:12px;color:var(--gray);margin:14px 0 4px;font-weight:normal;border-bottom:1px solid var(--line);padding-bottom:2px}
+aside label{display:flex;align-items:center;gap:6px;padding:3px 4px;border-radius:4px;cursor:pointer;font-size:12px}
+aside label:hover{background:var(--bg-light)}
+aside .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+aside input[type=search]{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font:inherit}
+.btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.button{border:1px solid var(--line);background:#fff;border-radius:4px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer;color:#333}
+.button:hover{background:var(--bg-light)}
+.button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.sorttabs{display:flex;flex-wrap:wrap;gap:4px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.stab{border:1px solid var(--line);background:#fff;border-radius:14px;padding:2px 10px;font:inherit;font-size:11.5px;cursor:pointer;color:#333}
+.stab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+aside label .lname{flex:1;min-width:0}
+aside label .lval{font-size:11.5px;font-weight:bold;color:var(--blue);white-space:nowrap}
+main{flex:1;min-width:0;padding:20px}
+.empty{background:#fff;border:1px solid var(--line);padding:40px;text-align:center;color:var(--gray)}
+.section{background:#fff;border:1px solid var(--line);margin-bottom:20px}
+.section>h2{font-size:18px;margin:0;padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:10px}
+.section>h2 small{font-size:12px;color:var(--gray);font-weight:normal}
+.charts{display:flex;flex-wrap:wrap;gap:20px;padding:20px;justify-content:center;align-items:center}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:14px;height:3px;display:inline-block}
+.scroll{overflow-x:auto}
+table.cmp{border-collapse:collapse;width:max-content;min-width:100%}
+table.cmp th,table.cmp td{border-top:1px solid var(--line);padding:8px 12px;vertical-align:top;text-align:left}
+table.cmp td{border-left:1px solid var(--line);width:250px;min-width:250px;max-width:340px}
+table.cmp th.row{background:var(--th);font-weight:normal;width:150px;min-width:150px;position:sticky;left:0;z-index:2;color:#333}
+table.cmp thead th{background:var(--bg-light);border-left:1px solid var(--line);font-size:13px;position:sticky;left:auto}
+table.cmp thead th.row{left:0;z-index:3}
+table.cmp tr:first-child th,table.cmp tr:first-child td{border-top:none}
+.cname{display:flex;align-items:center;gap:6px;font-weight:bold}
+.owlink{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:normal}
+.rank{display:inline-block;font-size:11px;padding:0 6px;border-radius:3px;background:var(--bg-light2);color:#333;font-weight:normal}
+.big{font-size:22px;font-weight:bold}
+.unit{font-size:12px;margin-left:3px}
+.num{font-size:15px;font-weight:bold}
+.muted{color:var(--gray);font-size:12px}
+td.best{background:var(--best)}
+td.best .num,td.best .big{color:var(--blue)}
+.stars{position:relative;display:inline-block;font-size:16px;letter-spacing:1px;line-height:1;vertical-align:middle}
+.stars .bg{color:#ddd}
+.stars .fg{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:var(--star)}
+.pct{background:var(--badge);color:#fff;border-radius:30px;padding:1px 10px;font-size:12px;margin-left:6px;white-space:nowrap}
+.meter{height:8px;background:var(--bg-light2);border-radius:4px;margin-top:4px;overflow:hidden}
+.meter>div{height:100%;background:var(--bar)}
+.meter10{position:relative;height:8px;background:#DCE3E8;margin-top:6px}
+.meter10>div{height:100%;background:var(--bar)}
+.meter10::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to right,transparent 0,transparent calc(10% - 2px),#fff calc(10% - 2px),#fff 10%)}
+.job{display:grid;grid-template-columns:1fr auto;gap:0 8px;margin-bottom:6px}
+.job .name{font-size:12px}
+.job .name small{color:var(--gray);margin-left:4px}
+.job .val{font-weight:bold;text-align:right;font-size:13px}
+.job .meter{grid-column:1 / 3;margin-top:2px}
+.job .rng{grid-column:1 / 3;color:var(--gray);font-size:11px}
+.more{margin-top:4px}
+.topic{border-top:1px dashed var(--line);padding-top:8px;margin-top:8px}
+.topic:first-child{border-top:none;margin-top:0;padding-top:0}
+.topic b{display:block;font-size:13px;margin-bottom:2px}
+.topic p{margin:0;font-size:12.5px;line-height:1.7}
+details.src{margin-top:4px;font-size:11.5px}
+details.src summary{cursor:pointer;color:var(--link)}
+details.src li{margin:4px 0;line-height:1.5}
+details.src ul{padding-left:16px;margin:4px 0}
+.na{color:#aaa;font-size:12px}
+.patterns{padding:14px 20px;border-bottom:1px solid var(--line);background:var(--bg-light)}
+.ptitle{font-weight:bold;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.toggles{display:flex;flex-wrap:wrap;gap:6px 18px}
+.tg{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12.5px;user-select:none}
+.tg input{display:none}
+.tg .sw{width:30px;height:17px;border-radius:17px;background:#C9D3DB;position:relative;transition:background .15s;flex-shrink:0}
+.tg .sw::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tg input:checked + .sw{background:var(--blue)}
+.tg input:checked + .sw::after{left:15px}
+.tg i{display:inline-block;width:16px}
+.pdescs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:12px}
+.pdesc{background:#fff;border:1px solid var(--line);padding:10px 12px;font-size:12px}
+.pdesc ul{margin:6px 0 0;padding-left:16px}
+.verdict{font-size:12px;color:#333;margin-left:4px}
+.match .verdict{margin:2px 0 0}
+.showp{margin-top:6px}
+.pnote{margin:10px 0 0}
+.basis{font-size:16px;font-weight:bold;color:var(--blue)}
+.memo{margin:0;font-size:12.5px;line-height:1.7;white-space:pre-wrap;background:#FFFBE6;border-left:3px solid #E6C84F;padding:4px 8px}
+.maplink{white-space:nowrap;font-size:12px;margin-left:4px}
+.locnote{margin:0 0 4px;font-size:12.5px;line-height:1.7}
+#tip{position:fixed;z-index:50;display:none;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.15);padding:7px 11px;font-size:12px;line-height:1.5;white-space:nowrap}
+#tip .tname{display:flex;align-items:center;gap:6px;font-weight:bold}
+#tip .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+#tip .tmain{font-size:14px;font-weight:bold;margin-top:2px}
+#tip .tsub{color:var(--gray);font-size:11.5px}
+circle.hit{cursor:pointer}
+svg text{font-family:inherit}
+@media (max-width:760px){
+  .layout{display:block}
+  aside{width:auto;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}
+  main{padding:12px}
+}
+</style>
+</head>
+<body>
+<header><span class="logo">OW 企業比較</span><span class="sub" id="sub"></span></header>
+<div class="layout">
+  <aside>
+    <input type="search" id="q" placeholder="企業名で絞り込み">
+    <div class="btns">
+      <button class="button" id="all">すべて選択</button>
+      <button class="button" id="none">すべて解除</button>
+    </div>
+    <div class="btns" id="rankBtns"></div>
+    <div class="sorttabs" id="sortTabs"></div>
+    <div id="list"></div>
+  </aside>
+  <main id="main"></main>
+</div>
+<script>
+const DATA = /*__DATA__*/[];
+const PALETTE = ["#1B7FBE","#F07F37","#2BA640","#9B59B6","#D9445C","#13A3A3","#8C6D3F","#5A6BD8","#C2A100","#E36BAE","#4D4D4D","#7FB800"];
+const SCORE_LABELS = ["待遇面の満足度","社員の士気","風通しの良さ","社員の相互尊重","20代成長環境","人材の長期育成","法令順守意識","人事評価の適正感"];
+const KEY = "ow-compare-selected";
+
+/* ---------- 8角形の典型パターン(出典: note 記事の独自分類) ----------
+   scores は SCORE_LABELS と同じ並び。danger は危険度(★の数) */
+const PATTERN_SOURCE = "https://note.com/legal_pothos347/n/n952c5db3dcdd";
+const PATTERNS = [
+  {name:"つの型", scores:[2.4,3.3,2.5,3.1,4.1,2.1,2.9,4.7], danger:5, verdict:"ブラック企業の典型・原則避ける", points:[
+    "待遇が悪く、風通しも悪く、人材育成にも期待しにくい。","若手の成長や成果を求められる一方、社員を長期的に育てる意識が弱い。",
+    "大量採用・早期離職・使い捨て型の企業を疑うべき形。","給与、離職率、労働時間を確認しても問題が重なるなら、応募を見送るべき。",
+    "「若いうちは苦労して当然」という説明で、悪い労働環境を正当化していないか注意。"]},
+  {name:"オープン型", scores:[3.3,4.8,3.2,3.5,4.6,2.6,2.6,4.7], danger:5, verdict:"激務型・ワークライフバランス重視なら避ける", points:[
+    "社員の士気や成長意欲は非常に高いが、法令順守や長期育成の評価が低い。","仕事中心の生活が求められ、私生活を犠牲にする可能性が高い。",
+    "成果を出して稼ぐことを最優先する体育会系組織に見られる。","高収入が期待できても、長時間労働や精神的負荷を受け入れる必要があるかもしれない。",
+    "安定して長く働きたい人、趣味や家庭を大切にしたい人は避けるべき。"]},
+  {name:"ゾスシールド型", scores:[2.8,4.6,4.1,3.6,4.7,2.7,3.2,4.6], danger:5, verdict:"体育会系・精神論型、合わない人は避ける", points:[
+    "士気や成長環境の評価が高い一方、待遇や法令順守、長期育成が弱い。","朝礼、社訓、目標達成への強い同調圧力などがある企業文化を警戒。",
+    "高い熱量を求められるが、その負担に待遇が見合っていない可能性がある。","個人の価値観より組織への忠誠や精神論が優先される職場なら危険。",
+    "昭和的な体育会系文化や強い同調圧力が苦手なら、入社を避けるべき。"]},
+  {name:"ちびすけ型", scores:[2.8,2.8,2.3,2.5,2.6,2.2,2.9,2.9], danger:4, verdict:"低評価が目立つ・積極的には勧めない", points:[
+    "ほぼすべての評価が低い。","特に風通しの悪さ、人材育成の弱さ、社員への配慮不足が懸念される。",
+    "給与・仕事内容・将来の成長機会のどこにも明確な強みが見えない可能性がある。","地方企業、小売、飲食、施工管理、設備系などで見られると記事では説明。",
+    "数値が低いだけでブラックとは断定できないが、他に条件の良い選択肢があるなら優先度を下げるべき。"]},
+  {name:"しずく型", scores:[3.7,3.1,2.9,3.0,3.4,2.9,3.2,3.6], danger:4, verdict:"高収入・激務型、覚悟がなければ避ける", points:[
+    "高収入や安定性が魅力だが、長時間労働のリスクがある。","記事では月70〜80時間の残業が生じる可能性にも言及。",
+    "仕事に人生を注ぎ、専門性を高めたい人には向く場合がある。","給与の高さだけで選ぶと、生活の大部分を仕事に奪われる危険がある。",
+    "残業実態を確認せずに入社するのは避けるべき。"]},
+  {name:"レバ型", scores:[3.0,4.7,4.6,4.7,4.7,3.0,3.1,4.1], danger:3, verdict:"激務寄りの成長企業・人を選ぶ", points:[
+    "士気、相互尊重、成長環境が高く、活気のある組織。","一方で、待遇や法令順守の評価が突出して高いわけではない。",
+    "ベンチャー、人材、広告業界などで見られると記事では説明。","長時間働き、早期にスキルや市場価値を高めたい人向け。",
+    "ワークライフバランスを最優先するなら慎重に判断するべき。"]},
+  {name:"頭デカ型", scores:[4.2,4.6,4.2,3.5,4.5,2.9,4.4,4.8], danger:3, verdict:"高成果主義・プレッシャーが強い", points:[
+    "待遇、士気、成長環境、評価制度が高い。","自分で成果を出し続けることが強く求められる。",
+    "自己管理能力や向上心が低い人には厳しい環境。","成果主義が強いため、評価や昇進に心理的なプレッシャーがある可能性。",
+    "安定して無理なく働きたい人には向かない。"]},
+  {name:"神型", scores:[3.8,4.5,4.6,4.4,4.7,3.5,4.5,4.3], danger:3, verdict:"高待遇・高成長だが、必ずしもホワイトではない", points:[
+    "ほぼすべての評価が高く、優秀な人材が集まりやすい。","高年収・高成長・高評価の環境が期待できる。",
+    "一方で、記事では残業時間も非常に多い類型とされる。","外資系、コンサルティング、大手高収益企業などに見られる。",
+    "高い成果を出す覚悟がある人には魅力的だが、楽に高収入を得られる会社ではない。","高評価だからホワイト企業と決めつけるのは危険。"]},
+  {name:"逆ダイヤ型", scores:[3.1,3.5,4.0,3.5,4.2,2.6,3.4,3.5], danger:2, verdict:"比較的良好・自走できる人向け", points:[
+    "風通しと若手の成長環境が比較的高い。","安定性と成長機会のバランスがある。","成果を出さなければ昇給しにくい可能性がある。",
+    "会社に育ててもらうより、自分から機会を取りにいく人向け。","ブラック企業の典型ではないが、受け身の姿勢では不満が生まれやすい。"]},
+  {name:"安定公務員型", scores:[2.6,2.6,3.1,3.6,2.6,2.7,4.9,2.8], danger:1, verdict:"安定志向にはおすすめ", points:[
+    "法令順守意識が非常に高い。","年功序列的な評価や長期雇用を重視する組織に多い。","若手の成長スピードや給与上昇は比較的緩やかな可能性。",
+    "急成長や早期昇進を望む人には物足りない。","長く安定して働きたい人には有力な候補。","ただし、残業時間や給与水準は別途確認が必要。"]},
+  {name:"ダイヤ型", scores:[4.4,3.5,3.7,4.1,3.5,3.6,4.8,3.0], danger:1, verdict:"ホワイト企業候補・積極的に検討", points:[
+    "待遇、相互尊重、法令順守、育成環境のバランスが良い。","長期的に安定して働きやすい企業に見られる。","記事では最もホワイトな類型として高く評価。",
+    "給与、福利厚生、働きやすさを総合的に重視する人に向く。","特別な懸念がなければ積極的に応募を検討してよい。","ただし、個別の職場や職種までホワイトである保証はない。"]},
+];
+const DANGER_COLOR = {5:"#C62828", 4:"#E65100", 3:"#B8860B", 2:"#2E7D32", 1:"#1565C0"};
+// レーダー上の点線の色(企業の色と区別しやすい濃いめの色)
+["#B71C1C","#880E4F","#4A148C","#E65100","#795548","#00695C","#33691E","#1A237E","#827717","#006064","#37474F"]
+  .forEach((col,i)=>PATTERNS[i].color = col);
+
+/* トグル一覧と、有効にした型の説明 */
+function patternPanel(){
+  const toggles = PATTERNS.map(p=>`<label class="tg" title="${esc(p.verdict)}">
+      <input type="checkbox" data-pattern="${esc(p.name)}" ${enabledPatterns.has(p.name)?"checked":""}><span class="sw"></span>
+      <i style="border-top:2px dashed ${p.color}"></i>${esc(p.name)} ${dangerStars(p.danger)}</label>`).join("");
+  const on = PATTERNS.filter(p=>enabledPatterns.has(p.name));
+  const desc = on.map(p=>`<div class="pdesc"><b style="color:${p.color}">${esc(p.name)}</b> ${dangerStars(p.danger)}
+      <span class="verdict">${esc(p.verdict)}</span><ul>${p.points.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("");
+  return `<div class="patterns">
+    <div class="ptitle">典型パターンを重ねる <button class="button" id="pAll">すべて有効</button> <button class="button" id="pNone">すべて無効</button></div>
+    <div class="toggles">${toggles}</div>
+    ${desc?`<div class="pdescs">${desc}</div>`:""}
+    <p class="muted pnote">類型は <a href="${PATTERN_SOURCE}" target="_blank" rel="noopener">note 記事</a> の執筆者による独自分類で、OW公式ではありません。
+    8項目の形だけでブラック企業かどうかは判断できません。残業時間・有給・年収・口コミと合わせて見てください。</p></div>`;
+}
+document.getElementById("main").addEventListener("change", e=>{
+  const n = e.target.dataset.pattern; if (!n) return;
+  e.target.checked ? enabledPatterns.add(n) : enabledPatterns.delete(n);
+  render();
+});
+document.getElementById("main").addEventListener("click", e=>{
+  if (e.target.id === "pAll"){ enabledPatterns = new Set(PATTERNS.map(p=>p.name)); render(); }
+  else if (e.target.id === "pNone"){ enabledPatterns.clear(); render(); }
+  else if (e.target.dataset.show){ enabledPatterns.add(e.target.dataset.show); render(); }
+});
+let enabledPatterns = new Set();   // 初期状態はすべて無効(保存しない)
+
+// 一致率: 8項目の差の二乗平均平方根(RMSE)から計算。差 0 → 100%、平均 2 点ずれる → 0%
+function matchRate(scores, p){
+  const d = SCORE_LABELS.map((l,i)=>(scores[l] ?? 0) - p.scores[i]);
+  const rmse = Math.sqrt(d.reduce((a,b)=>a+b*b,0) / d.length);
+  return Math.max(0, 100 * (1 - rmse / 2));
+}
+function rankPatterns(c){
+  if (!c.scores || SCORE_LABELS.some(l=>c.scores[l]==null)) return [];
+  return PATTERNS.map(p=>({p, rate:matchRate(c.scores, p)})).sort((a,b)=>b.rate-a.rate);
+}
+// 星はおすすめ度(= 6 − 危険度)。避けるべき型ほど少ない
+const dangerStars = n => { const g = 6 - n; return `<span title="おすすめ度 ${g} / 5" style="color:${DANGER_COLOR[n]};letter-spacing:1px">${"★".repeat(g)}<span style="color:#ddd">${"★".repeat(5-g)}</span></span>`; };
+
+// 色は選択中の企業の並び順で割り当てる(12社を超えたら色相をずらして作る)
+const colorAt = i => i < PALETTE.length ? PALETTE[i] : `hsl(${(i * 137.5) % 360}, 60%, 45%)`;
+function assignColors(){
+  let i = 0;
+  DATA.forEach(c => c.color = selected.has(c.folder) ? colorAt(i++) : "#ccc");
+}
+// 初期表示はランクAの企業(前回の選択が残っていればそれを使う)
+let selected = new Set(DATA.filter(c=>c.rank==="A").map(c=>c.folder));
+if (!selected.size) selected = new Set(DATA.map(c=>c.folder));
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (Array.isArray(s)) selected = new Set(s.filter(f=>DATA.some(c=>c.folder===f))); } catch(e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...selected])); } catch(e) {} };
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const fmt = (v, d=0) => v == null ? null : Number(v).toLocaleString("ja-JP", {minimumFractionDigits:d, maximumFractionDigits:d});
+const NA = '<span class="na">データなし</span>';
+
+/* ---------- サイドバー ---------- */
+// 並び替え。dir: 1 = 大きい順、-1 = 小さい順
+const SORTS = [
+  {key:"rank", label:"ランク順"},
+  {key:"total", label:"総合評価", dir:1, get:c=>c.total, show:c=>fmt(c.total,2)},
+  {key:"avg_salary", label:"年収", dir:1, get:c=>c.avg_salary, show:c=>fmt(c.avg_salary)+"万円"},
+  {key:"overtime", label:"残業時間", dir:-1, get:c=>c.overtime, show:c=>fmt(c.overtime,1)+"h"},
+  {key:"paid_leave", label:"有給消化率", dir:-1, get:c=>c.paid_leave, show:c=>fmt(c.paid_leave,1)+"%"},
+];
+let sortKey = "rank";
+try { const k = localStorage.getItem("ow-compare-sort"); if (SORTS.some(x=>x.key===k)) sortKey = k; } catch(e) {}
+function sorted(list){
+  const so = SORTS.find(x=>x.key===sortKey);
+  if (!so.get) return list.slice().sort((a,b)=>a.rank.localeCompare(b.rank) || DATA.indexOf(a)-DATA.indexOf(b));
+  return list.slice().sort((a,b)=>{
+    const va = so.get(a), vb = so.get(b);
+    if (va==null && vb==null) return 0;
+    if (va==null) return 1;            // 値がない企業は最後
+    if (vb==null) return -1;
+    return so.dir * (vb - va);
+  });
+}
+function renderList(){
+  const q = document.getElementById("q").value.trim();
+  const so = SORTS.find(x=>x.key===sortKey);
+  const ranks = [...new Set(DATA.map(c=>c.rank))].sort();
+  const item = c=>`<label><input type="checkbox" data-f="${esc(c.folder)}" ${selected.has(c.folder)?"checked":""}>
+      <span class="dot" style="background:${c.color}"></span><span class="lname">${esc(c.name)}<br><span class="muted">${esc(c.folder)}</span></span>
+      ${so.show?`<span class="lval">${so.get(c)==null?"―":esc(so.show(c))}</span>`:""}</label>`;
+  const hit = c=>!q || (c.name+c.folder).includes(q);
+  let html = "";
+  if (sortKey === "rank"){
+    for (const r of ranks){
+      const items = sorted(DATA.filter(c=>c.rank===r && hit(c)));
+      if (!items.length) continue;
+      html += `<h3>${r === "-" ? "ランクなし" : "ランク " + esc(r)}</h3>` + items.map(item).join("");
+    }
+  } else {
+    html = `<h3>${esc(so.label)}(${so.dir>0?"高い順":"低い順"})</h3>` + sorted(DATA.filter(hit)).map(item).join("");
+  }
+  document.getElementById("list").innerHTML = html;
+  document.getElementById("sortTabs").innerHTML = SORTS.map(x=>`<button class="stab ${x.key===sortKey?"on":""}" data-sort="${x.key}">${esc(x.label)}</button>`).join("");
+  document.getElementById("rankBtns").innerHTML = ranks.filter(r=>r!=="-").map(r=>`<button class="button" data-rank="${esc(r)}">${esc(r)}だけ</button>`).join("");
+}
+document.getElementById("sortTabs").addEventListener("click", e=>{
+  const k = e.target.dataset.sort; if (!k) return;
+  sortKey = k; try { localStorage.setItem("ow-compare-sort", k); } catch(err) {}
+  render();
+});
+document.getElementById("list").addEventListener("change", e=>{
+  const f = e.target.dataset.f; if (!f) return;
+  e.target.checked ? selected.add(f) : selected.delete(f);
+  save(); render();
+});
+document.getElementById("rankBtns").addEventListener("click", e=>{
+  const r = e.target.dataset.rank; if (!r) return;
+  selected = new Set(DATA.filter(c=>c.rank===r).map(c=>c.folder)); save(); renderList(); render();
+});
+document.getElementById("all").onclick = ()=>{ selected = new Set(DATA.map(c=>c.folder)); save(); renderList(); render(); };
+document.getElementById("none").onclick = ()=>{ selected.clear(); save(); renderList(); render(); };
+document.getElementById("q").oninput = renderList;
+
+/* ---------- 表の部品 ---------- */
+function bestIndex(vals, lower=false){
+  const nums = vals.map((v,i)=>[v,i]).filter(([v])=>v!=null);
+  if (nums.length < 2) return new Set();
+  const target = lower ? Math.min(...nums.map(x=>x[0])) : Math.max(...nums.map(x=>x[0]));
+  return new Set(nums.filter(([v])=>v===target).map(([,i])=>i));
+}
+function row(label, cs, cell, opts={}){
+  const vals = opts.value ? cs.map(opts.value) : null;
+  const best = vals ? bestIndex(vals, opts.lower) : new Set();
+  return `<tr><th class="row">${label}</th>${cs.map((c,i)=>`<td class="${best.has(i)?"best":""}">${cell(c) ?? NA}</td>`).join("")}</tr>`;
+}
+function head(cs){
+  return `<thead><tr><th class="row"></th>${cs.map(c=>`<th><div class="cname"><span class="dot" style="width:10px;height:10px;border-radius:50%;background:${c.color}"></span>
+    <a href="${esc(c.url||"#")}" target="_blank" rel="noopener">${esc(c.name)}</a></div>
+    <span class="rank">${esc(c.folder)}</span>
+    ${c.url?`<a class="owlink" href="${esc(c.url)}" target="_blank" rel="noopener">OWトップ ↗</a>`:""}</th>`).join("")}</tr></thead>`;
+}
+const table = (cs, rows) => `<div class="scroll"><table class="cmp">${head(cs)}<tbody>${rows.join("")}</tbody></table></div>`;
+function stars(v){
+  const w = Math.max(0, Math.min(5, v)) / 5 * 100;
+  return `<span class="stars"><span class="bg">★★★★★</span><span class="fg" style="width:${w}%">★★★★★</span></span>`;
+}
+// 10等分の目盛り付きメーター(元サイトの残業・有給バーと同じ見た目)
+const meter10 = (v, max, unit) => `<div class="meter10" title="0〜${max}${unit}・1目盛り ${max/10}${unit}"><div style="width:${Math.max(0, Math.min(100, v / max * 100))}%"></div></div>`;
+const meter = (v, max) => `<div class="meter"><div style="width:${Math.min(100, v / max * 100)}%"></div></div>`;
+const legend = cs => `<div class="legend">${cs.map(c=>`<span><i style="background:${c.color}"></i>${esc(c.name)}</span>`).join("")}</div>`;
+
+const mapLink = c => c.office && c.office.map ? ` <a class="maplink" href="${esc(c.office.map)}" target="_blank" rel="noopener">📍 地図 ↗</a>` : "";
+
+/* ---------- ホバーで出すポップアップ ---------- */
+// 点の上に重ねる透明な当たり判定。data-* の内容をポップアップに出す
+const hit = (x, y, name, color, main, sub="") =>
+  `<circle class="hit" cx="${x}" cy="${y}" r="11" fill="transparent" data-name="${esc(name)}" data-color="${esc(color)}" data-main="${esc(main)}" data-sub="${esc(sub)}"/>`;
+const tipEl = document.createElement("div");
+tipEl.id = "tip"; document.body.appendChild(tipEl);
+document.addEventListener("mouseover", e=>{
+  const h = e.target.closest ? e.target.closest("circle.hit") : null;
+  if (!h){ tipEl.style.display = "none"; return; }
+  const d = h.dataset;
+  tipEl.innerHTML = `<div class="tname"><span class="dot" style="background:${d.color}"></span>${esc(d.name)}</div>
+    <div class="tmain">${esc(d.main)}</div>${d.sub?`<div class="tsub">${esc(d.sub)}</div>`:""}`;
+  tipEl.style.display = "block";
+  const r = h.getBoundingClientRect(), w = tipEl.offsetWidth, ht = tipEl.offsetHeight;
+  const left = Math.min(window.innerWidth - w - 8, Math.max(8, r.left + r.width/2 - w/2));
+  let top = r.top - ht - 10;
+  if (top < 60) top = r.bottom + 10;   // 上に入らなければ下に出す
+  tipEl.style.left = left + "px"; tipEl.style.top = top + "px";
+});
+
+/* ---------- レーダーチャート ---------- */
+function radar(cs){
+  const W = 420, H = 360, cx = W/2, cy = H/2 + 6, R = 120, n = SCORE_LABELS.length;
+  const pt = (i, v) => { const a = -Math.PI/2 + i * 2*Math.PI/n; return [cx + Math.cos(a)*R*v/5, cy + Math.sin(a)*R*v/5]; };
+  const hits = [];
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" style="max-width:100%;height:auto">`;
+  for (let lv=1; lv<=5; lv++){
+    s += `<polygon points="${SCORE_LABELS.map((_,i)=>pt(i,lv).join(",")).join(" ")}" fill="${lv===5?"#F7FAFC":"none"}" stroke="#DBE4E7"/>`;
+  }
+  SCORE_LABELS.forEach((l,i)=>{
+    const [x,y] = pt(i,5); s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#DBE4E7"/>`;
+    const [lx,ly] = pt(i,5.9);
+    const anchor = Math.abs(lx-cx) < 5 ? "middle" : (lx > cx ? "start" : "end");
+    s += `<text x="${lx}" y="${ly+4}" font-size="11.5" fill="#333" text-anchor="${anchor}">${esc(l)}</text>`;
+  });
+  // 有効にした典型パターン(点線)
+  for (const p of PATTERNS.filter(p=>enabledPatterns.has(p.name))){
+    const pts = p.scores.map((v,i)=>pt(i, v).join(",")).join(" ");
+    s += `<polygon points="${pts}" fill="none" stroke="${p.color}" stroke-width="2" stroke-dasharray="6 4"><title>${esc(p.name)}</title></polygon>`;
+    p.scores.forEach((v,i)=>{ const [x,y] = pt(i, v); s += `<rect x="${x-2.5}" y="${y-2.5}" width="5" height="5" fill="${p.color}"/>`;
+      hits.push(hit(x, y, p.name + "(典型パターン)", p.color, `${SCORE_LABELS[i]}　${v}`)); });
+  }
+  for (const c of cs){
+    if (!c.scores) continue;
+    const pts = SCORE_LABELS.map((l,i)=>pt(i, c.scores[l] ?? 0).join(",")).join(" ");
+    s += `<polygon points="${pts}" fill="${c.color}" fill-opacity="${cs.length>3?0.06:0.14}" stroke="${c.color}" stroke-width="2"/>`;
+    SCORE_LABELS.forEach((l,i)=>{ const [x,y] = pt(i, c.scores[l] ?? 0); s += `<circle cx="${x}" cy="${y}" r="2.6" fill="${c.color}"/>`;
+      hits.push(hit(x, y, c.name, c.color, `${l}　${c.scores[l] ?? "-"}`)); });
+  }
+  return s + hits.join("") + "</svg>";
+}
+
+/* ---------- 年齢別の折れ線 ---------- */
+function lineChart(cs){
+  const series = cs.filter(c=>c.age_salary && c.age_salary.length);
+  if (!series.length) return NA;
+  const ages = [...new Set(series.flatMap(c=>c.age_salary.map(p=>p.age)))].sort((a,b)=>a-b);
+  // 縦軸は推定範囲(ばらつき)まで含めて 250 万円刻み
+  const vals = series.flatMap(c=>c.age_salary.flatMap(p=>[p.salary, ...(p.range||[])])).filter(v=>v!=null);
+  const STEP = 250;
+  const lo = Math.max(0, Math.floor(Math.min(...vals)/STEP)*STEP), hi = Math.ceil(Math.max(...vals)/STEP)*STEP;
+  const W = 720, H = 430, L = 62, Rm = 46, T = 64, B = 44;
+  const slot = (W-L-Rm) / ages.length;                       // 年齢ごとの区画
+  const x = a => L + slot * (ages.indexOf(a) + 0.5);
+  const y = v => T + (1-(v-lo)/((hi-lo)||1))*(H-T-B);
+  const hits = [];
+  const labels = series.length <= 2;                           // 社数が多いときは数値ラベルを省く
+  const band = series.length === 1 ? 0.22 : (series.length <= 3 ? 0.13 : 0.07);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" style="max-width:100%;height:auto">`;
+  s += `<text x="${W/2}" y="24" font-size="15" text-anchor="middle" fill="#333">年齢別の推定年収の推移</text>`;
+  s += `<text x="${L-8}" y="${T-22}" font-size="11.5" text-anchor="end" fill="#555">(万円)</text>`;
+  for (let v=lo; v<=hi; v+=STEP){
+    s += `<line x1="${L}" x2="${W-Rm}" y1="${y(v)}" y2="${y(v)}" stroke="#D8DEE6"/><text x="${L-8}" y="${y(v)+4}" font-size="12" text-anchor="end" fill="#555">${v}</text>`;
+  }
+  // 横軸(区切りの目盛りと年齢)
+  s += `<line x1="${L}" x2="${W-Rm}" y1="${y(lo)}" y2="${y(lo)}" stroke="#AFC2D6"/>`;
+  for (let i=0; i<=ages.length; i++){ const tx = L + slot*i; s += `<line x1="${tx}" x2="${tx}" y1="${y(lo)}" y2="${y(lo)+8}" stroke="#AFC2D6"/>`; }
+  ages.forEach(a=>{ s += `<text x="${x(a)}" y="${H-16}" font-size="12" text-anchor="middle" fill="#555">${a}</text>`; });
+  s += `<text x="${W-Rm+6}" y="${H-16}" font-size="12" fill="#555">(歳)</text>`;
+  // ばらつき(推定範囲)の帯
+  for (const c of series){
+    const pts = c.age_salary.filter(p=>p.range);
+    if (pts.length < 2) continue;
+    const up = pts.map(p=>`${x(p.age)},${y(p.range[1])}`), dn = pts.slice().reverse().map(p=>`${x(p.age)},${y(p.range[0])}`);
+    s += `<polygon points="${up.concat(dn).join(" ")}" fill="${c.color}" fill-opacity="${band}" stroke="none"><title>${esc(c.name)} の推定範囲</title></polygon>`;
+  }
+  // 推定年収の線と点
+  for (const c of series){
+    const pts = c.age_salary.filter(p=>p.salary!=null);
+    s += `<polyline points="${pts.map(p=>x(p.age)+","+y(p.salary)).join(" ")}" fill="none" stroke="${c.color}" stroke-width="2.5"/>`;
+    pts.forEach(p=>{
+      s += `<circle cx="${x(p.age)}" cy="${y(p.salary)}" r="5" fill="${c.color}" stroke="#fff" stroke-width="1.5"/>`;
+      hits.push(hit(x(p.age), y(p.salary), c.name, c.color, `${p.age}歳　${fmt(p.salary)}万円`, p.range?`推定範囲 ${fmt(p.range[0])}〜${fmt(p.range[1])}万円`:""));
+      if (labels) s += `<text x="${x(p.age)}" y="${y(p.salary)-11}" font-size="13" font-weight="bold" text-anchor="middle" fill="#222" paint-order="stroke" stroke="#fff" stroke-width="3">${Math.round(p.salary)}万</text>`;
+    });
+  }
+  return s + hits.join("") + "</svg>";
+}
+
+/* ---------- 本体 ---------- */
+function render(){
+  assignColors(); renderList();
+  const cs = sorted(DATA.filter(c=>selected.has(c.folder)));   // 列もサイドバーと同じ並び順
+  document.getElementById("sub").textContent = `${cs.length} / ${DATA.length} 社を表示中`;
+  const main = document.getElementById("main");
+  if (!cs.length){ main.innerHTML = '<div class="empty">左の一覧から比較したい企業を選んでください。</div>'; return; }
+
+  // 基本
+  const basic = table(cs, [
+    row("OW", cs, c=>c.url?`<a href="${esc(c.url)}" target="_blank" rel="noopener">トップページ ↗</a>${c.salary_url?`<br><a href="${esc(c.salary_url)}" target="_blank" rel="noopener">年収・給与 ↗</a>`:""}`:null),
+    row("総合評価", cs, c=>c.total==null?null:`${stars(c.total)} <span class="num">${fmt(c.total,2)}</span>${c.top_percent!=null?`<span class="pct">上位 ${fmt(c.top_percent)}%</span>`:""}`, {value:c=>c.total}),
+    row("平均年収", cs, c=>c.avg_salary==null?null:`<span class="num">${fmt(c.avg_salary)}</span><span class="unit">万円</span>${c.avg_age!=null?`<span class="muted"> (平均 ${fmt(c.avg_age)}歳)</span>`:""}`, {value:c=>c.avg_salary}),
+    row("勤務地", cs, c=>c.office?`<span class="num" style="font-size:13.5px">${esc(c.office.place)}</span>${mapLink(c)}`:null),
+    row("残業時間(月間)", cs, c=>c.overtime==null?null:`<span class="num">${fmt(c.overtime,1)}</span><span class="unit">h</span>${meter10(c.overtime, 100, "h")}`, {value:c=>c.overtime, lower:true}),
+    row("有給休暇消化率", cs, c=>c.paid_leave==null?null:`<span class="num">${fmt(c.paid_leave,1)}</span><span class="unit">%</span>${meter10(c.paid_leave, 100, "%")}`, {value:c=>c.paid_leave}),
+    row("回答者数", cs, c=>c.respondents==null?null:`<span class="num">${fmt(c.respondents)}</span><span class="unit">人</span>`),
+    row("メモ", cs, c=>c.memo?`<p class="memo">${esc(c.memo)}</p>`:'<span class="na">―</span>'),
+  ]);
+
+  // 8項目
+  // 最も一致率の高い典型パターン(上位3つ)
+  const matchCell = c=>{
+    const r = rankPatterns(c); if (!r.length) return null;
+    const [top, ...rest] = r;
+    return `<div class="match"><b style="color:${top.p.color}">${esc(top.p.name)}</b>
+      <span class="num">${fmt(top.rate,0)}%</span> ${dangerStars(top.p.danger)}
+      <div class="verdict">${esc(top.p.verdict)}</div>
+      <div class="muted">2位 ${esc(rest[0].p.name)} ${fmt(rest[0].rate,0)}% / 3位 ${esc(rest[1].p.name)} ${fmt(rest[1].rate,0)}%</div>
+      ${enabledPatterns.has(top.p.name)?"":`<button class="button showp" data-show="${esc(top.p.name)}">この型を重ねる</button>`}</div>`;
+  };
+  const scoreRows = [row(`最も近い型<div class="muted">一致率</div>`, cs, matchCell)].concat(SCORE_LABELS.map(l=>row(l, cs, c=>c.scores&&c.scores[l]!=null?`<span class="num">${fmt(c.scores[l],1)}</span>${meter(c.scores[l],5)}`:null, {value:c=>c.scores?c.scores[l]:null})));
+
+  // 年収
+  const salary = table(cs, [
+    row("回答者の平均年収", cs, c=>c.avg_salary==null?null:`<span class="big">${fmt(c.avg_salary)}</span><span class="unit">万円</span>`, {value:c=>c.avg_salary}),
+    row("年収範囲", cs, c=>c.salary_range?`${fmt(c.salary_range[0])}万円 〜 ${fmt(c.salary_range[1])}万円`:null),
+    row("平均年齢", cs, c=>c.avg_age==null?null:`${fmt(c.avg_age)}歳`),
+    row("年収の回答者数", cs, c=>c.salary_respondents==null?null:`正社員 ${fmt(c.salary_respondents)}人`),
+    row("業界平均との差", cs, c=>{
+      if (c.avg_salary==null || c.industry_avg==null) return null;
+      const d = c.avg_salary - c.industry_avg;
+      return `<span class="num" style="color:${d>=0?"var(--blue)":"#D9445C"}">${d>=0?"+":""}${fmt(d)}万円</span><div class="muted">${esc(c.industry||"")} 平均 ${fmt(c.industry_avg)}万円</div>`;
+    }, {value:c=>c.avg_salary!=null&&c.industry_avg!=null?c.avg_salary-c.industry_avg:null}),
+  ]);
+
+  // 年齢別
+  const ages = [...new Set(cs.flatMap(c=>(c.age_salary||[]).map(p=>p.age)))].sort((a,b)=>a-b);
+  const ageRows = ages.map(a=>row(`${a}歳`, cs, c=>{
+    const p = (c.age_salary||[]).find(p=>p.age===a);
+    return p ? `<span class="num">${fmt(p.salary)}</span><span class="unit">万円</span>${p.range?`<div class="muted">${fmt(p.range[0])} 〜 ${fmt(p.range[1])}万円</div>`:""}` : null;
+  }, {value:c=>{ const p=(c.age_salary||[]).find(p=>p.age===a); return p?p.salary:null; }}));
+
+  // 職種別
+  const maxJob = Math.max(1, ...cs.flatMap(c=>(c.occupation_salary||[]).map(j=>j.range?j.range[1]:j.avg||0)));
+  const jobCell = c=>{
+    const js = c.occupation_salary||[]; if (!js.length) return null;
+    const item = j=>`<div class="job"><span class="name">${esc(j.job)}<small>${j.count!=null?fmt(j.count)+"人":""}</small></span><span class="val">${fmt(j.avg)}万円</span>
+      ${meter(j.avg, maxJob)}${j.range?`<span class="rng">${fmt(j.range[0])} 〜 ${fmt(j.range[1])}万円</span>`:""}</div>`;
+    const first = js.slice(0,5).map(item).join(""), rest = js.slice(5).map(item).join("");
+    return first + (rest?`<details class="src more"><summary>残り${js.length-5}職種を見る</summary>${rest}</details>`:"");
+  };
+
+  // AI要約
+  const aiCell = c=>{
+    const t = c.ai_summary||[]; if (!t.length) return null;
+    return t.map(x=>`<div class="topic"><b>${esc(x.title)}</b><p>${esc(x.body)}</p>
+      ${x.sources&&x.sources.length?`<details class="src"><summary>要約元の口コミ(${x.sources.length}件)</summary><ul>${x.sources.map(s=>`<li><span class="muted">${esc(s.meta)} ${esc(s.date)}</span><br><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.text)}</a></li>`).join("")}</ul></details>`:""}</div>`).join("");
+  };
+
+  // 勤務地(デザイン職の勤務地候補)
+  const BASIS = {"◎":"拠点を確認済み","○":"有力","△":"候補が複数・不明瞭","？":"根拠不足"};
+  const locRows = [
+    row("想定出勤先", cs, c=>c.office?`<span class="num" style="font-size:14px">${esc(c.office.office)}</span>`:null),
+    row("住所", cs, c=>c.office?`${esc(c.office.address)}${mapLink(c)}`:null),
+    row("確度", cs, c=>c.office?`<span class="basis">${esc(c.office.basis)}</span> <span class="muted">${esc(BASIS[c.office.basis]||"")}</span>`:null),
+    row("補足", cs, c=>c.office?`<p class="locnote">${esc(c.office.note)}</p>`:null),
+    row("他の候補", cs, c=>c.location?(c.location.others?esc(c.location.others):'<span class="muted">―</span>'):null),
+    row("調査メモ", cs, c=>c.location?`<p class="locnote muted">${esc(c.location.note)}</p>${c.location.source?`<a href="${esc(c.location.source)}" target="_blank" rel="noopener">出典 ↗</a>`:""}`:null),
+  ];
+  const locSection = `<section class="section"><h2>勤務地 <small>UI/UX・デザイン職で新卒入社した場合の候補(配属の保証ではない)</small></h2>
+    <div class="patterns"><span class="muted">根拠: <b>◎</b> デザイン組織・求人・インターンで勤務拠点を確認 / <b>○</b> 関連職・開発拠点から有力 / <b>△</b> 複数候補まで・所在が不明瞭 / <b>？</b> 特定できる根拠が不足。
+    出典は「勤務地_GoogleMaps.md」と「勤務地候補.md」(2026年11月21日調査)。地図は住所の検索リンクで、建物内の部署までは保証しません。</span></div>${table(cs, locRows)}</section>`;
+
+  main.innerHTML = `
+  <section class="section"><h2>基本情報</h2>${basic}</section>
+  <section class="section"><h2>社員による会社評価スコア <small>8項目・5点満点</small></h2>
+    ${patternPanel()}
+    <div class="charts">${radar(cs)}<div>${legend(cs)}${enabledPatterns.size?`<div class="legend" style="margin-top:8px">${PATTERNS.filter(p=>enabledPatterns.has(p.name)).map(p=>`<span><i style="height:0;border-top:2px dashed ${p.color}"></i>${esc(p.name)}</span>`).join("")}</div>`:""}</div></div>
+    ${table(cs, scoreRows)}</section>
+  <section class="section"><h2>年収</h2>${salary}</section>
+  <section class="section"><h2>年齢別の推定年収</h2>
+    <div class="charts">${lineChart(cs)}${legend(cs.filter(c=>c.age_salary&&c.age_salary.length))}</div>
+    ${ageRows.length?table(cs, ageRows):""}</section>
+  <section class="section"><h2>職種別の平均年収</h2>${table(cs,[row("職種別", cs, jobCell)])}</section>
+  <section class="section"><h2>クチコミAI要約 <small>直近2年間のクチコミから OW が生成</small></h2>${table(cs,[row("トピック", cs, aiCell)])}</section>
+  ${locSection}`;
+}
+
+render();
+</script>
+</body>
+</html>

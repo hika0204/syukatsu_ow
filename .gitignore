@@ -1,0 +1,19 @@
+# 公開するのは比較ページと、それを作るスクリプト・データ・ドキュメントだけ。
+# 企業フォルダ(MHTML)や .webloc はローカル専用なので、すべて除外してから必要なものだけ戻す。
+/*
+!/.gitignore
+!/index.html
+!/tools/
+!/README.md
+!/AGENTS.md
+!/CLAUDE.md
+!/設計書.md
+!/勤務地_GoogleMaps.md
+!/勤務地候補.md
+!/メモ.json
+
+# 念のため、どこにあっても入れない
+*.mhtml
+*.webloc
+__pycache__/
+.DS_Store
