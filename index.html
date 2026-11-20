@@ -485,7 +485,9 @@ function lineChart(cs){
 /* ---------- 本体 ---------- */
 function render(){
   assignColors(); renderList();
-  const cs = sorted(DATA.filter(c=>selected.has(c.folder)));   // 列もサイドバーと同じ並び順
+  // 列はチェックを入れた順(新しく選んだ企業は右端に追加)。並び替えタブは左の一覧だけに効く
+  const byFolder = Object.fromEntries(DATA.map(c=>[c.folder, c]));
+  const cs = [...selected].map(f=>byFolder[f]).filter(Boolean);
   document.getElementById("sub").textContent = `${cs.length} / ${DATA.length} 社を表示中`;
   const main = document.getElementById("main");
   if (!cs.length){ main.innerHTML = '<div class="empty">左の一覧から比較したい企業を選んでください。</div>'; return; }
