@@ -24,6 +24,7 @@
 | ランク変更 | `python3 tools/ow_data.py rank <フォルダ名> <A〜E>` |
 | 企業追加・数値更新 | MHTML を `<ランク>_<英語名>/` に置いて `python3 tools/ow_data.py add <フォルダ名>` |
 | 勤務地の修正 | `勤務地_GoogleMaps.md` を直して `python3 tools/ow_data.py import-md` |
+| 初任給・財務の修正 | `初任給_財務.md` を直して `python3 tools/ow_data.py import-md`。市場区分と TOPIX Core30 は `tools/ow_data.py` の `MARKET` / `CORE30`(年1回10月に入替あり) |
 | 見た目・動きの変更 | `index.html` の HTML / CSS / JavaScript を直接編集する |
 
 ## 確認

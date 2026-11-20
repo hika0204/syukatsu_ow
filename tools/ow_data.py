@@ -7,7 +7,7 @@ MHTML は手元に置いてあるだけで、Git には入れない。
     python3 tools/ow_data.py memo <フォルダ名> <メモ>   # メモを書く(空にすると消える)
     python3 tools/ow_data.py rank <フォルダ名> <A〜E>   # ランクを変える(手元のフォルダ名も変える)
     python3 tools/ow_data.py add <フォルダ名>...        # 手元の MHTML から企業を追加・数値を更新する
-    python3 tools/ow_data.py import-md                  # 勤務地の md 2つから出勤先・候補を取り込む
+    python3 tools/ow_data.py import-md                  # 勤務地・初任給・財務の md を取り込む
     python3 tools/ow_data.py list                       # 登録されている企業の一覧
 """
 import email
@@ -23,6 +23,20 @@ SRC = ROOT
 PAGE = ROOT / "index.html"   # 正本
 LOCATIONS = SRC / "勤務地候補.md"   # デザイン職の勤務地候補(企業名で突き合わせる)
 OFFICES = SRC / "勤務地_GoogleMaps.md"   # 想定出勤先・住所・Googleマップ
+SALARY_FIN = SRC / "初任給_財務.md"   # 修士初任給と、業績・財務(時価総額・営業利益率など)
+
+# 東証の市場区分と TOPIX Core30(2026年10月30日の定期入替後)。md にない情報なのでここで持つ。
+# 出典: JPX「TOPIX Core30 定期選定結果」(2026-10-07公表)、各社の市場区分(JPX上場会社情報)
+MARKET = {
+    "7267": "プライム", "6752": "プライム", "7944": "プライム", "6758": "プライム", "7203": "プライム",
+    "6952": "プライム", "4751": "プライム", "6902": "プライム", "4901": "プライム", "6501": "プライム",
+    "7261": "プライム", "4443": "プライム", "7269": "プライム", "7951": "プライム", "7272": "プライム",
+    "2432": "プライム", "7351": "グロース", "9433": "プライム", "6971": "プライム", "2130": "プライム",
+    "7011": "プライム", "6503": "プライム", "7201": "プライム", "6753": "プライム", "9449": "プライム",
+    "6861": "プライム", "4385": "プライム", "7211": "プライム", "7731": "プライム", "4755": "プライム",
+    "7270": "プライム", "4053": "プライム", "4689": "プライム", "543A": "プライム",
+}
+CORE30 = {"6501", "6503", "6752", "6758", "6861", "7011", "7203", "9433"}   # このリストに含まれる企業分のみ
 
 SCORE_KEYS = [
     ("satisfy", "待遇面の満足度"), ("spirit", "社員の士気"), ("airy", "風通しの良さ"),
@@ -235,6 +249,76 @@ def short_place(address: str) -> str:
     return m.group(1) + m.group(2) if m else (address or "")
 
 
+def md_tables(path: Path):
+    """md の表を (見出し行, 各行の列リスト) の組で順に返す。"""
+    header = None
+    for line in path.read_text(encoding="utf-8").splitlines():
+        t = line.strip()
+        if not t.startswith("|"):
+            header = None
+            continue
+        cols = [c.strip() for c in t.strip("|").split("|")]
+        if header is None:
+            header = cols
+        elif set("".join(cols)) <= set("-: "):
+            continue
+        else:
+            yield header, cols
+
+
+def links(text: str):
+    return [{"label": a, "url": b} for a, b in re.findall(r"\[([^\]]+)\]\((\S+?)\)", text or "")]
+
+
+def yen_to_man(text: str) -> str:
+    """「295,700円」→「29.57万円」のように万円表記にする。数字以外の文言はそのまま残す。"""
+    def rep(m):
+        v = round(int(m.group(1).replace(",", "")) / 10000, 2)
+        return f"{v:g}万" + ("円" if m.group(2) else "")
+    return re.sub(r"(\d{1,3}(?:,\d{3})+|\d{5,})(円)?", rep, text)
+
+
+def market_info(code: str):
+    return {"code": code, "market": MARKET.get(code), "core30": code in CORE30}
+
+
+def parse_salary_fin(path: Path):
+    """初任給_財務.md から {企業名: 初任給} と {企業名: 財務} を作る。"""
+    salary, finance = {}, {}
+    if not path.exists():
+        return salary, finance
+    for header, cols in md_tables(path):
+        if "修士初任給（額面）" in header and len(cols) == 6:
+            name, amount, nature, year, note, src = cols
+            raw = re.sub(r"⚠\s*", "⚠", amount.replace("**", "")).strip()
+            flag = "⚠" in raw or "⚠" in nature
+            lk = links(src)
+            salary[name] = {
+                "display": yen_to_man(raw.replace("⚠", "").strip()),
+                "raw": raw.replace("⚠", "").strip(), "flag": flag,
+                "nature": nature.replace("⚠", "").strip(), "year": year, "note": note,
+                "url": lk[0]["url"] if lk else None,
+            }
+        elif "営業利益率" in header and len(cols) == 10:
+            name, listing, cap, parent, opm, eq, cf, target, src, note = cols
+            m = re.match(r"上場（(\w+)）", listing)   # 「非上場（上場親会社あり）」は対象外
+            f = {"listing": listing, "self": market_info(m.group(1)) if m else None,
+                 "cap": None if cap in ("—", "") else cap, "parent": None,
+                 "op_margin": opm, "equity_ratio": eq, "op_cf": cf,
+                 "target": target.replace("**", ""), "links": links(src), "note": note.strip()}
+            pm = re.match(r"(.+?)（(.+?)）\s*[:：]\s*(.+)", parent)
+            if pm:
+                pname, pcode, pcap = pm.groups()
+                if re.fullmatch(r"\w{4}", pcode):
+                    f["parent"] = {"name": pname, **market_info(pcode), "cap": pcap}
+                else:   # 海外上場(例: 米NYSE)
+                    ticker = {"Accenture plc": "ACN", "IBM Corporation": "IBM"}.get(pname)
+                    f["parent"] = {"name": pname, "code": ticker, "market": pcode.replace("米", ""), "core30": False,
+                                   "cap": pcap, "overseas": True}
+            finance[name] = f
+    return salary, finance
+
+
 def write_webloc(folder: Path, url: str):
     out = folder.parent / f"{folder.name}.webloc"
     if out.exists() or not url:
@@ -329,7 +413,16 @@ def cmd_add(html, data, args):
 
 def cmd_import_md(html, data):
     locs, offices = parse_locations(LOCATIONS), parse_offices(OFFICES)
+    salary, finance = parse_salary_fin(SALARY_FIN)
     for c in data:
+        if c["name"] in salary:
+            c["start_salary"] = salary[c["name"]]
+        else:
+            print(f"初任給なし: {c['folder']}  {c['name']}")
+        if c["name"] in finance:
+            c["finance"] = finance[c["name"]]
+        else:
+            print(f"財務なし: {c['folder']}  {c['name']}")
         loc, off = locs.get(c["name"]), offices.get(c["name"])
         if loc:
             c["location"] = loc
@@ -339,7 +432,7 @@ def cmd_import_md(html, data):
         if not off:
             print(f"出勤先なし: {c['folder']}  {c['name']}")
     save_page(html, data)
-    print(f"取り込みました({len(offices)}社分の出勤先、{len(locs)}社分の候補)")
+    print(f"取り込みました(出勤先 {len(offices)}社、候補 {len(locs)}社、初任給 {len(salary)}社、財務 {len(finance)}社)")
 
 
 def main():
