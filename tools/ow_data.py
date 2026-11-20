@@ -1,8 +1,14 @@
-"""保存した OpenWork の MHTML から比較用の HTML を作る。
+"""index.html の中のデータ(const DATA)を読み書きするツール。
 
-使い方:
-    python3 tools/build_compare.py A_roland A_honda   # 指定した企業だけ
-    python3 tools/build_compare.py                    # フォルダ内の全社
+index.html が正本。ページの見た目もデータも index.html に入っている。
+MHTML は手元に置いてあるだけで、Git には入れない。
+
+使い方(リポジトリのルートで実行):
+    python3 tools/ow_data.py memo <フォルダ名> <メモ>   # メモを書く(空にすると消える)
+    python3 tools/ow_data.py rank <フォルダ名> <A〜E>   # ランクを変える(手元のフォルダ名も変える)
+    python3 tools/ow_data.py add <フォルダ名>...        # 手元の MHTML から企業を追加・数値を更新する
+    python3 tools/ow_data.py import-md                  # 勤務地の md 2つから出勤先・候補を取り込む
+    python3 tools/ow_data.py list                       # 登録されている企業の一覧
 """
 import email
 import json
@@ -14,10 +20,8 @@ from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parent.parent   # リポジトリのルート(企業フォルダもここに置く)
 SRC = ROOT
-OUT = ROOT / "index.html"
-TEMPLATE = Path(__file__).resolve().parent / "compare_template.html"
+PAGE = ROOT / "index.html"   # 正本
 LOCATIONS = SRC / "勤務地候補.md"   # デザイン職の勤務地候補(企業名で突き合わせる)
-MEMOS = SRC / "メモ.json"   # 自分用のメモ({フォルダ名: メモ})
 OFFICES = SRC / "勤務地_GoogleMaps.md"   # 想定出勤先・住所・Googleマップ
 
 SCORE_KEYS = [
@@ -243,34 +247,109 @@ def write_webloc(folder: Path, url: str):
     print(f"  リンクを作成: {out.name}")
 
 
-def main():
-    names = sys.argv[1:] or sorted(p.name for p in SRC.iterdir()
-                                   if p.is_dir() and any(p.glob("*.mhtml")))
-    locs = parse_locations(LOCATIONS)
-    offices = parse_offices(OFFICES)
-    memos = json.loads(MEMOS.read_text(encoding="utf-8")) if MEMOS.exists() else {}
-    data = []
-    for n in names:
+DATA_RE = re.compile(r"(const DATA = )(\[.*?\])(;\n)", re.S)
+
+
+def load_page():
+    html = PAGE.read_text(encoding="utf-8")
+    m = DATA_RE.search(html)
+    if not m:
+        sys.exit("index.html に const DATA が見つかりません")
+    return html, json.loads(m.group(2))
+
+
+def save_page(html, data):
+    body = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    new = DATA_RE.sub(lambda m: m.group(1) + body + m.group(3), html, count=1)
+    PAGE.write_text(new, encoding="utf-8")
+
+
+def find(data, folder):
+    for c in data:
+        if c["folder"] == folder:
+            return c
+    sys.exit(f"登録されていません: {folder}  (python3 tools/ow_data.py list で確認)")
+
+
+def cmd_list(html, data):
+    for c in data:
+        print(f"{c['folder']:26s} {c['name']}  {('メモ: ' + c['memo']) if c.get('memo') else ''}")
+
+
+def cmd_memo(html, data, args):
+    if not args:
+        sys.exit("使い方: memo <フォルダ名> <メモ>")
+    c = find(data, args[0])
+    c["memo"] = " ".join(args[1:]).strip()
+    save_page(html, data)
+    print(f"{c['folder']}: メモを{'更新' if c['memo'] else '削除'}しました")
+
+
+def cmd_rank(html, data, args):
+    if len(args) != 2 or not re.fullmatch(r"[A-Z]", args[1]):
+        sys.exit("使い方: rank <フォルダ名> <A〜Zの1文字>")
+    c = find(data, args[0])
+    old = c["folder"]
+    base = old[2:] if re.match(r"[A-Z]_", old) else old
+    new = f"{args[1]}_{base}"
+    if any(x["folder"] == new for x in data):
+        sys.exit(f"すでにあります: {new}")
+    c["folder"], c["rank"] = new, args[1]
+    save_page(html, data)
+    for suffix in ("", ".webloc"):    # 手元の MHTML フォルダと .webloc も合わせる(あれば)
+        src, dst = ROOT / (old + suffix), ROOT / (new + suffix)
+        if src.exists() and not dst.exists():
+            src.rename(dst)
+    print(f"{old} -> {new}")
+
+
+def cmd_add(html, data, args):
+    if not args:
+        sys.exit("使い方: add <フォルダ名>...")
+    for n in args:
         folder = SRC / n
-        if not folder.is_dir():
-            print(f"[skip] フォルダがありません: {n}")
+        if not folder.is_dir() or not any(folder.glob("*.mhtml")):
+            print(f"[skip] 手元に MHTML のフォルダがありません: {n}")
             continue
-        c = build_company(folder)
-        c["location"] = locs.get(c["name"])
-        c["office"] = offices.get(c["name"])
-        c["memo"] = memos.get(n, "")
-        if c["office"]:
-            c["office"]["place"] = short_place(c["office"]["address"])  # 地図リンクと同じ住所から作る
-        write_webloc(folder, c.get("url"))
-        data.append(c)
-        missing = [k for k in ("total", "scores", "avg_salary", "age_salary", "occupation_salary") if not c.get(k)]
-        print(f"{n}: {c['name']}  AI要約 {len(c.get('ai_summary', []))}件"
-              + ("" if c["office"] else "  出勤先なし")
-              + (f"  欠け: {missing}" if missing else ""))
-    html = TEMPLATE.read_text(encoding="utf-8").replace(
-        "/*__DATA__*/[]", json.dumps(data, ensure_ascii=False).replace("</", "<\\/"))
-    OUT.write_text(html, encoding="utf-8")
-    print(f"\n出力: {OUT}  ({len(data)}社)")
+        new = build_company(folder)
+        old = next((c for c in data if c["folder"] == n), None)
+        if old:   # 更新: 数値は入れ替え、メモ・出勤先・勤務地は残す
+            for k in ("memo", "office", "location"):
+                if old.get(k):
+                    new[k] = old[k]
+            data[data.index(old)] = new
+        else:
+            new.setdefault("memo", "")
+            data.append(new)
+        write_webloc(folder, new.get("url"))
+        missing = [k for k in ("total", "scores", "avg_salary", "age_salary", "occupation_salary") if not new.get(k)]
+        print(f"{'更新' if old else '追加'}: {n}  {new['name']}" + (f"  欠け: {missing}" if missing else ""))
+    save_page(html, data)
+
+
+def cmd_import_md(html, data):
+    locs, offices = parse_locations(LOCATIONS), parse_offices(OFFICES)
+    for c in data:
+        loc, off = locs.get(c["name"]), offices.get(c["name"])
+        if loc:
+            c["location"] = loc
+        if off:
+            off["place"] = short_place(off["address"])
+            c["office"] = off
+        if not off:
+            print(f"出勤先なし: {c['folder']}  {c['name']}")
+    save_page(html, data)
+    print(f"取り込みました({len(offices)}社分の出勤先、{len(locs)}社分の候補)")
+
+
+def main():
+    if len(sys.argv) < 2 or sys.argv[1] not in ("list", "memo", "rank", "add", "import-md"):
+        sys.exit(__doc__)
+    html, data = load_page()
+    cmd, args = sys.argv[1], sys.argv[2:]
+    {"list": lambda: cmd_list(html, data), "memo": lambda: cmd_memo(html, data, args),
+     "rank": lambda: cmd_rank(html, data, args), "add": lambda: cmd_add(html, data, args),
+     "import-md": lambda: cmd_import_md(html, data)}[cmd]()
 
 
 if __name__ == "__main__":

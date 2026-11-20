@@ -22,39 +22,55 @@
 
 ## 構成
 
+**GitHub 上の `index.html` が正本です。** ページの見た目も、全社のデータ(`const DATA`)もこの1ファイルに入っています。MHTML は元データとして手元に置いているだけで、Git には入れません。
+
 | パス | 内容 |
 |---|---|
-| `index.html` | 公開している比較ページ(自動生成。直接編集しない) |
-| `tools/build_compare.py` | 企業フォルダの MHTML から数値を取り出し、`index.html` を作る |
-| `tools/compare_template.html` | ページの雛形(見た目・動きはここを編集する) |
-| `勤務地_GoogleMaps.md` | 想定出勤先・住所・Googleマップのリンク |
-| `勤務地候補.md` | 勤務地の他の候補・調査メモ・出典 |
-| `メモ.json` | 自分用メモ(`{"フォルダ名": "メモ"}`) |
+| `index.html` | 正本。公開している比較ページ(画面・データ・メモが入っている) |
+| `tools/ow_data.py` | `index.html` のデータを読み書きする補助ツール(メモ、ランク、企業追加など) |
+| `勤務地_GoogleMaps.md`、`勤務地候補.md` | 勤務地の調査メモ(出典の記録)。`import-md` で `index.html` に取り込んだ。普段は読まない |
 | `設計書.md` | 抽出項目や画面の仕様 |
-| `<ランク>_<企業名>/` | 保存した MHTML(**Git には入れない**。ローカルのみ) |
+| `<ランク>_<企業名>/` | 手元の MHTML(**Git には入れない**) |
 
 ## 運用
 
-### ページを更新する
+作業はすべて、このリポジトリの `index.html` に対して行い、終わったら commit して push します。push すると数分で GitHub Pages に反映されます。
 
 ```bash
-python3 tools/build_compare.py
-git add -A && git commit -m "Update compare page" && git push
+git pull                        # 別の端末で更新していたら先に取り込む
+# ... 変更する ...
+git add -A && git commit -m "Update" && git push
 ```
 
-push すると数分で GitHub Pages に反映されます。必要なライブラリは `beautifulsoup4` だけです(`pip install beautifulsoup4`)。
+### メモを書く(普通の文章で書ける)
 
-### 企業を追加する
+```bash
+python3 tools/ow_data.py memo B_sony "新卒の募集は6月。"
+```
 
-1. OW で企業のトップ、すべての社員クチコミ、年収・給与制度の3ページを MHTML で保存する。
-2. `<ランク>_<英語名>/` のフォルダを作って3ファイルを入れる(例: `B_sony/`)。
-3. 必要なら `勤務地_GoogleMaps.md` と `勤務地候補.md` に行を足す。企業名は OW の正式名と完全一致させる。
-4. 「ページを更新する」の手順を実行する。
+空にすると消えます。`index.html` の `const DATA` を直接書き換えてもかまいませんが、1行がとても長いので、上のコマンドが安全です。
 
 ### ランクを変える
 
-フォルダ名の先頭の文字を変えて(例: `B_x` → `E_x`)、ページを更新する。`メモ.json` のキーもフォルダ名に合わせて直す。
+```bash
+python3 tools/ow_data.py rank B_sony E     # B_sony -> E_sony
+```
 
-### メモを書く
+手元の MHTML フォルダと `.webloc` があれば、名前も合わせて変わります。
 
-`メモ.json` に追記して、ページを更新する。`index.html` を直接書き換えると、次の更新で消えます。
+### 企業を追加する・数値を更新する
+
+1. OW で企業のトップ、すべての社員クチコミ、年収・給与制度の3ページを MHTML で保存する。
+2. `<ランク>_<英語名>/` のフォルダを作って3ファイルを入れる(例: `B_sony/`)。
+3. 取り込む。
+
+```bash
+pip install beautifulsoup4       # 初回のみ
+python3 tools/ow_data.py add B_sony
+```
+
+既存の企業に実行すると、数値だけが入れ替わり、メモ・勤務地は残ります。勤務地は `勤務地_GoogleMaps.md` などに行を足して `python3 tools/ow_data.py import-md` で取り込めます。企業名は OW の正式名と完全一致させてください。
+
+### 見た目・動きを変える
+
+`index.html` の HTML / CSS / JavaScript を直接編集します。変更したらブラウザで開いて、コンソールにエラーがないかを確認します。
