@@ -7,7 +7,7 @@ MHTML は手元に置いてあるだけで、Git には入れない。
     python3 tools/ow_data.py memo <フォルダ名> <メモ>   # メモを書く(空にすると消える)
     python3 tools/ow_data.py rank <フォルダ名> <A〜E>   # ランクを変える(手元のフォルダ名も変える)
     python3 tools/ow_data.py add <フォルダ名>...        # 手元の MHTML から企業を追加・数値を更新する
-    python3 tools/ow_data.py import-md                  # 勤務地・初任給・財務の md を取り込む
+    python3 tools/ow_data.py import-md                  # 勤務地・初任給・財務・年間休日の md を取り込む
     python3 tools/ow_data.py list                       # 登録されている企業の一覧
 """
 import email
@@ -23,6 +23,7 @@ SRC = ROOT
 PAGE = ROOT / "index.html"   # 正本
 LOCATIONS = SRC / "勤務地候補.md"   # デザイン職の勤務地候補(企業名で突き合わせる)
 OFFICES = SRC / "勤務地_GoogleMaps.md"   # 想定出勤先・住所・Googleマップ
+HOLIDAYS = SRC / "年間休日.md"   # 年間休日と根拠URL
 SALARY_FIN = SRC / "初任給_財務.md"   # 修士初任給と、業績・財務(時価総額・営業利益率など)
 
 # 東証の市場区分と TOPIX Core30(2026年10月30日の定期入替後)。md にない情報なのでここで持つ。
@@ -319,6 +320,39 @@ def parse_salary_fin(path: Path):
     return salary, finance
 
 
+def base_name(name: str) -> str:
+    """「株式会社デンソー（自動車部品）」→「株式会社デンソー」。表記ゆれをそろえて突き合わせる。"""
+    return re.sub(r"（[^）]*）$", "", name or "").strip()
+
+
+def parse_holidays(path: Path) -> dict:
+    """年間休日.md の「根拠URL」の各節(### N. 正式名)から {正式名(括弧なし): {...}} を作る。
+    備考は冒頭の一覧表(No. で対応)から取る。"""
+    if not path.exists():
+        return {}
+    text = path.read_text(encoding="utf-8")
+    remarks = {}
+    for header, cols in md_tables(path):
+        if "年間休日" in header and len(cols) == 4 and cols[0].isdigit():
+            remarks[cols[0]] = cols[3]
+    out = {}
+    for m in re.finditer(r"^###\s*(\d+)\.\s*(.+?)\n(.*?)(?=^###\s|^---|\Z)", text, re.S | re.M):
+        no, name, body = m.group(1), m.group(2).strip(), m.group(3)
+        v = re.search(r"年間休日：\s*(.+)", body)
+        sources = []
+        for sm in re.finditer(r"出典：\s*(.+?)\n\s*(https?://\S+)", body):
+            sources.append({"label": sm.group(1).strip(), "url": sm.group(2).strip()})
+        notes = [ln.strip() for ln in body.splitlines()
+                 if ln.strip().startswith(("注意：", "補足：")) or ln.strip().startswith(("完全週休", "年間休日数の明示"))]
+        out[base_name(name)] = {
+            "value": v.group(1).strip() if v else None,
+            "remark": remarks.get(no, ""),
+            "sources": sources,
+            "notes": notes,
+        }
+    return out
+
+
 def write_webloc(folder: Path, url: str):
     out = folder.parent / f"{folder.name}.webloc"
     if out.exists() or not url:
@@ -414,7 +448,13 @@ def cmd_add(html, data, args):
 def cmd_import_md(html, data):
     locs, offices = parse_locations(LOCATIONS), parse_offices(OFFICES)
     salary, finance = parse_salary_fin(SALARY_FIN)
+    holidays = parse_holidays(HOLIDAYS)
     for c in data:
+        h = holidays.get(base_name(c["name"]))
+        if h:
+            c["holidays"] = h
+        else:
+            print(f"年間休日なし: {c['folder']}  {c['name']}")
         if c["name"] in salary:
             c["start_salary"] = salary[c["name"]]
         else:
@@ -432,7 +472,7 @@ def cmd_import_md(html, data):
         if not off:
             print(f"出勤先なし: {c['folder']}  {c['name']}")
     save_page(html, data)
-    print(f"取り込みました(出勤先 {len(offices)}社、候補 {len(locs)}社、初任給 {len(salary)}社、財務 {len(finance)}社)")
+    print(f"取り込みました(出勤先 {len(offices)}社、候補 {len(locs)}社、初任給 {len(salary)}社、財務 {len(finance)}社、年間休日 {len(holidays)}社)")
 
 
 def main():
