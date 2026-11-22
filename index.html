@@ -7,9 +7,20 @@
 <title>OW 企業比較</title>
 <style>
 :root{
-  --blue:#1B7FBE; --link:#166C9D; --badge:#368FCE; --bar:#61A3CE;
+  --blue:#1B7FBE; --link:#166C9D; --badge:#368FCE; --bar:#61A3CE; --accent:#1B7FBE;
   --line:#D6DFE5; --bg-light:#F2F6FA; --bg-light2:#EDF2F6; --th:#F5F5F5;
-  --gray:#777; --text:#000; --star:#F07F37; --best:#E3F0FA;
+  --gray:#777; --text:#000; --text2:#333; --text3:#555; --star:#F07F37; --best:#E3F0FA;
+  --surface:#fff; --track:#DCE3E8; --sw:#C9D3DB; --star-off:#ddd; --na:#aaa; --warn:#C25E00;
+  --grid:#DBE4E7; --grid2:#D8DEE6; --axis:#AFC2D6; --plot:#F7FAFC; --shadow:rgba(0,0,0,.15);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --blue:#5AAFE6; --link:#72BDEC; --badge:#2F7DB8; --bar:#4F93C2; --accent:#1F6FA5;
+  --line:#33404B; --bg-light:#222C35; --bg-light2:#12181E; --th:#222B33;
+  --gray:#8D99A3; --text:#E6EBEF; --text2:#CBD4DB; --text3:#A9B4BD; --star:#F59A5C; --best:#183A54;
+  --surface:#1A2229; --track:#2E3A45; --sw:#47545F; --star-off:#3A4651; --na:#6B7782; --warn:#F0A04B;
+  --grid:#34414C; --grid2:#2F3B46; --axis:#4A5B6B; --plot:#1F2830; --shadow:rgba(0,0,0,.5);
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -18,29 +29,33 @@ body{background:var(--bg-light2);color:var(--text);
   font-size:13px;line-height:1.666}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
-header{background:#fff;border-bottom:1px solid var(--line);height:52px;display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:20}
-header .logo{font-weight:bold;font-size:18px;color:var(--blue);letter-spacing:.02em}
+header{background:var(--surface);border-bottom:1px solid var(--line);height:52px;display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:20}
+header .logo{font-weight:bold;font-size:18px;color:var(--blue);letter-spacing:.02em;white-space:nowrap}
 header .sub{color:var(--gray);font-size:12px}
+header .hright{margin-left:auto;display:flex;align-items:center;gap:8px}
+.iconbtn{border:1px solid var(--line);background:var(--surface);color:var(--text2);border-radius:18px;height:32px;min-width:32px;padding:0 10px;font:inherit;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.iconbtn:hover{background:var(--bg-light)}
+#listBtn{display:none}
 .layout{display:flex;align-items:flex-start}
-aside{width:250px;flex-shrink:0;background:#fff;border-right:1px solid var(--line);height:calc(100vh - 52px);position:sticky;top:52px;overflow:auto;padding:14px}
+aside{width:250px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--line);height:calc(100vh - 52px);position:sticky;top:52px;overflow:auto;padding:14px}
 aside h3{font-size:12px;color:var(--gray);margin:14px 0 4px;font-weight:normal;border-bottom:1px solid var(--line);padding-bottom:2px}
 aside label{display:flex;align-items:center;gap:6px;padding:3px 4px;border-radius:4px;cursor:pointer;font-size:12px}
 aside label:hover{background:var(--bg-light)}
 aside .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-aside input[type=search]{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font:inherit}
+aside input[type=search]{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font:inherit;background:var(--surface);color:var(--text)}
 .btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.button{border:1px solid var(--line);background:#fff;border-radius:4px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer;color:#333}
+.button{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer;color:var(--text2)}
 .button:hover{background:var(--bg-light)}
-.button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .sorttabs{display:flex;flex-wrap:wrap;gap:4px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
-.stab{border:1px solid var(--line);background:#fff;border-radius:14px;padding:2px 10px;font:inherit;font-size:11.5px;cursor:pointer;color:#333}
-.stab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.stab{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:2px 10px;font:inherit;font-size:11.5px;cursor:pointer;color:var(--text2)}
+.stab.on{background:var(--accent);border-color:var(--accent);color:#fff}
 aside label .lname{flex:1;min-width:0}
 aside label .lval{font-size:11.5px;font-weight:bold;color:var(--blue);white-space:nowrap}
 main{flex:1;min-width:0;padding:20px}
-.empty{background:#fff;border:1px solid var(--line);padding:40px;text-align:center;color:var(--gray)}
-.section{background:#fff;border:1px solid var(--line);margin-bottom:20px}
-.section>h2{font-size:18px;margin:0;padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:10px}
+.empty{background:var(--surface);border:1px solid var(--line);padding:40px;text-align:center;color:var(--gray)}
+.section{background:var(--surface);border:1px solid var(--line);margin-bottom:20px}
+.section>h2{font-size:18px;margin:0;padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .section>h2 small{font-size:12px;color:var(--gray);font-weight:normal}
 .charts{display:flex;flex-wrap:wrap;gap:20px;padding:20px;justify-content:center;align-items:center}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px}
@@ -50,13 +65,21 @@ main{flex:1;min-width:0;padding:20px}
 table.cmp{border-collapse:collapse;width:max-content;min-width:100%}
 table.cmp th,table.cmp td{border-top:1px solid var(--line);padding:8px 12px;vertical-align:top;text-align:left}
 table.cmp td{border-left:1px solid var(--line);width:250px;min-width:250px;max-width:340px}
-table.cmp th.row{background:var(--th);font-weight:normal;width:150px;min-width:150px;position:sticky;left:0;z-index:2;color:#333}
+table.cmp th.row{background:var(--th);font-weight:normal;width:150px;min-width:150px;position:sticky;left:0;z-index:2;color:var(--text2)}
 table.cmp thead th{background:var(--bg-light);border-left:1px solid var(--line);font-size:13px;position:sticky;left:auto}
 table.cmp thead th.row{left:0;z-index:3}
 table.cmp tr:first-child th,table.cmp tr:first-child td{border-top:none}
+/* 行と列を入れ替えた表(スマホ): 行が企業、列が項目 */
+table.cmp.tr thead th{font-weight:normal;color:var(--text2);font-size:12px;min-width:140px}
+table.cmp.tr thead th.row{min-width:0}
+table.cmp.tr td{width:auto;min-width:140px;max-width:240px}
+table.cmp.tr td.wide{min-width:230px;max-width:300px}
+table.cmp.tr tbody th.row{width:112px;min-width:112px;max-width:112px;background:var(--surface);font-size:12px}
+table.cmp.tr tbody th.row .cname{font-size:12.5px;align-items:flex-start;line-height:1.4}
+table.cmp.tr tbody th.row .cname .dot{margin-top:4px;flex-shrink:0}
 .cname{display:flex;align-items:center;gap:6px;font-weight:bold}
 .owlink{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:normal}
-.rank{display:inline-block;font-size:11px;padding:0 6px;border-radius:3px;background:var(--bg-light2);color:#333;font-weight:normal}
+.rank{display:inline-block;font-size:11px;padding:0 6px;border-radius:3px;background:var(--bg-light2);color:var(--text2);font-weight:normal;word-break:break-all}
 .big{font-size:22px;font-weight:bold}
 .unit{font-size:12px;margin-left:3px}
 .num{font-size:15px;font-weight:bold}
@@ -64,14 +87,14 @@ table.cmp tr:first-child th,table.cmp tr:first-child td{border-top:none}
 td.best{background:var(--best)}
 td.best .num,td.best .big{color:var(--blue)}
 .stars{position:relative;display:inline-block;font-size:16px;letter-spacing:1px;line-height:1;vertical-align:middle}
-.stars .bg{color:#ddd}
+.stars .bg{color:var(--star-off)}
 .stars .fg{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:var(--star)}
 .pct{background:var(--badge);color:#fff;border-radius:30px;padding:1px 10px;font-size:12px;margin-left:6px;white-space:nowrap}
 .meter{height:8px;background:var(--bg-light2);border-radius:4px;margin-top:4px;overflow:hidden}
 .meter>div{height:100%;background:var(--bar)}
-.meter10{position:relative;height:8px;background:#DCE3E8;margin-top:6px}
+.meter10{position:relative;height:8px;background:var(--track);margin-top:6px}
 .meter10>div{height:100%;background:var(--bar)}
-.meter10::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to right,transparent 0,transparent calc(10% - 2px),#fff calc(10% - 2px),#fff 10%)}
+.meter10::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to right,transparent 0,transparent calc(10% - 2px),var(--surface) calc(10% - 2px),var(--surface) 10%)}
 .job{display:grid;grid-template-columns:1fr auto;gap:0 8px;margin-bottom:6px}
 .job .name{font-size:12px}
 .job .name small{color:var(--gray);margin-left:4px}
@@ -87,50 +110,80 @@ details.src{margin-top:4px;font-size:11.5px}
 details.src summary{cursor:pointer;color:var(--link)}
 details.src li{margin:4px 0;line-height:1.5}
 details.src ul{padding-left:16px;margin:4px 0}
-.na{color:#aaa;font-size:12px}
+.na{color:var(--na);font-size:12px}
 .patterns{padding:14px 20px;border-bottom:1px solid var(--line);background:var(--bg-light)}
 .ptitle{font-weight:bold;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .toggles{display:flex;flex-wrap:wrap;gap:6px 18px}
 .tg{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12.5px;user-select:none}
 .tg input{display:none}
-.tg .sw{width:30px;height:17px;border-radius:17px;background:#C9D3DB;position:relative;transition:background .15s;flex-shrink:0}
+.tg .sw{width:30px;height:17px;border-radius:17px;background:var(--sw);position:relative;transition:background .15s;flex-shrink:0}
 .tg .sw::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
-.tg input:checked + .sw{background:var(--blue)}
+.tg input:checked + .sw{background:var(--accent)}
 .tg input:checked + .sw::after{left:15px}
 .tg i{display:inline-block;width:16px}
 .pdescs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:12px}
-.pdesc{background:#fff;border:1px solid var(--line);padding:10px 12px;font-size:12px}
+.pdesc{background:var(--surface);border:1px solid var(--line);padding:10px 12px;font-size:12px}
 .pdesc ul{margin:6px 0 0;padding-left:16px}
-.verdict{font-size:12px;color:#333;margin-left:4px}
+.verdict{font-size:12px;color:var(--text2);margin-left:4px}
 .match .verdict{margin:2px 0 0}
 .showp{margin-top:6px}
 .pnote{margin:10px 0 0}
 .basis{font-size:16px;font-weight:bold;color:var(--blue)}
 .memo{margin:0;font-size:13px;line-height:1.7;white-space:pre-wrap}
 .srclink{color:var(--link);text-decoration:underline;text-underline-offset:2px}
-.warn{color:#C25E00;font-size:12px;font-weight:bold;margin-top:2px}
+.warn{color:var(--warn);font-size:12px;font-weight:bold;margin-top:2px}
 .small{font-size:11.5px;line-height:1.5}
-.tag{display:inline-block;font-size:10.5px;color:#555;background:var(--bg-light2);border-radius:3px;padding:0 5px;margin-left:4px;font-weight:normal;vertical-align:1px}
+.tag{display:inline-block;font-size:10.5px;color:var(--text3);background:var(--bg-light2);border-radius:3px;padding:0 5px;margin-left:4px;font-weight:normal;vertical-align:1px}
 .maplink{white-space:nowrap;font-size:12px;margin-left:4px}
 .locnote{margin:0 0 4px;font-size:12.5px;line-height:1.7}
-#tip{position:fixed;z-index:50;display:none;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.15);padding:7px 11px;font-size:12px;line-height:1.5;white-space:nowrap}
+#tip{position:fixed;z-index:50;display:none;pointer-events:none;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px var(--shadow);padding:7px 11px;font-size:12px;line-height:1.5;white-space:nowrap}
 #tip .tname{display:flex;align-items:center;gap:6px;font-weight:bold}
 #tip .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
 #tip .tmain{font-size:14px;font-weight:bold;margin-top:2px}
 #tip .tsub{color:var(--gray);font-size:11.5px}
 circle.hit{cursor:pointer}
 svg text{font-family:inherit}
+/* グラフの色(テーマで切り替える。CSS は SVG の属性より優先される) */
+svg .g{stroke:var(--grid)}
+svg .g5{fill:var(--plot);stroke:var(--grid)}
+svg .g2{stroke:var(--grid2)}
+svg .ax{stroke:var(--axis)}
+svg .t2{fill:var(--text2)}
+svg .t3{fill:var(--text3)}
+svg .lbl{fill:var(--text);stroke:var(--surface)}
+svg .pt{stroke:var(--surface)}
 @media (max-width:760px){
+  header{padding:0 12px;gap:8px}
+  header .sub{display:none}
+  header .logo{font-size:16px}
+  #listBtn{display:inline-flex}
   .layout{display:block}
-  aside{width:auto;height:auto;position:static;border-right:none;border-bottom:1px solid var(--line)}
-  main{padding:12px}
+  aside{display:none;width:auto;height:auto;max-height:65vh;position:sticky;top:52px;z-index:15;border-right:none;border-bottom:1px solid var(--line);box-shadow:0 6px 14px var(--shadow)}
+  body.list-open aside{display:block}
+  main{padding:10px}
+  .section{margin-bottom:12px}
+  .section>h2{font-size:16px;padding:10px 12px}
+  .patterns{padding:10px 12px}
+  .charts{padding:12px;gap:12px}
+  table.cmp th,table.cmp td{padding:7px 9px}
 }
 </style>
+<script>
+// テーマ(ライト/ダーク)を描画前に決める。保存した選択がなければ端末の設定に合わせる
+(function(){ let t = null; try { t = localStorage.getItem("ow-theme"); } catch(e) {}
+  if (t !== "light" && t !== "dark") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.documentElement.dataset.theme = t; })();
+</script>
 </head>
 <body>
-<header><span class="logo">OW 企業比較</span><span class="sub" id="sub"></span></header>
+<header><span class="logo">OW 企業比較</span><span class="sub" id="sub"></span>
+  <div class="hright">
+    <button class="iconbtn" id="listBtn" aria-expanded="false" aria-controls="side">企業一覧 <span id="listCount"></span> ▾</button>
+    <button class="iconbtn" id="themeBtn" aria-label="ライトモードとダークモードを切り替え"></button>
+  </div>
+</header>
 <div class="layout">
-  <aside>
+  <aside id="side">
     <input type="search" id="q" placeholder="企業名で絞り込み">
     <div class="btns">
       <button class="button" id="all">すべて選択</button>
@@ -196,10 +249,19 @@ const PATTERNS = [
     "待遇、相互尊重、法令順守、育成環境のバランスが良い。","長期的に安定して働きやすい企業に見られる。","記事では最もホワイトな類型として高く評価。",
     "給与、福利厚生、働きやすさを総合的に重視する人に向く。","特別な懸念がなければ積極的に応募を検討してよい。","ただし、個別の職場や職種までホワイトである保証はない。"]},
 ];
-const DANGER_COLOR = {5:"#C62828", 4:"#E65100", 3:"#B8860B", 2:"#2E7D32", 1:"#1565C0"};
-// レーダー上の点線の色(企業の色と区別しやすい濃いめの色)
-["#B71C1C","#880E4F","#4A148C","#E65100","#795548","#00695C","#33691E","#1A237E","#827717","#006064","#37474F"]
-  .forEach((col,i)=>PATTERNS[i].color = col);
+// 危険度の色と、レーダー上の点線の色(企業の色と区別しやすい色)。ダークモードでは明るめの色に替える
+const DANGER_LIGHT = {5:"#C62828", 4:"#E65100", 3:"#B8860B", 2:"#2E7D32", 1:"#1565C0"};
+const DANGER_DARK  = {5:"#EF5350", 4:"#FF8A3D", 3:"#E0B341", 2:"#66BB6A", 1:"#64B5F6"};
+const PATTERN_LIGHT = ["#B71C1C","#880E4F","#4A148C","#E65100","#795548","#00695C","#33691E","#1A237E","#827717","#006064","#37474F"];
+const PATTERN_DARK  = ["#EF5350","#F06292","#BA68C8","#FFA726","#BCAAA4","#4DB6AC","#9CCC65","#7986CB","#D4E157","#4DD0E1","#B0BEC5"];
+let DANGER_COLOR = DANGER_LIGHT;
+const isDark = () => document.documentElement.dataset.theme === "dark";
+function applyThemeColors(){
+  const d = isDark();
+  DANGER_COLOR = d ? DANGER_DARK : DANGER_LIGHT;
+  PATTERNS.forEach((p,i)=>p.color = (d ? PATTERN_DARK : PATTERN_LIGHT)[i]);
+}
+applyThemeColors();
 
 /* トグル一覧と、有効にした型の説明 */
 function patternPanel(){
@@ -239,10 +301,13 @@ function rankPatterns(c){
   return PATTERNS.map(p=>({p, rate:matchRate(c.scores, p)})).sort((a,b)=>b.rate-a.rate);
 }
 // 星はおすすめ度(= 6 − 危険度)。避けるべき型ほど少ない
-const dangerStars = n => { const g = 6 - n; return `<span title="おすすめ度 ${g} / 5" style="color:${DANGER_COLOR[n]};letter-spacing:1px">${"★".repeat(g)}<span style="color:#ddd">${"★".repeat(5-g)}</span></span>`; };
+const dangerStars = n => { const g = 6 - n; return `<span title="おすすめ度 ${g} / 5" style="color:${DANGER_COLOR[n]};letter-spacing:1px">${"★".repeat(g)}<span style="color:var(--star-off)">${"★".repeat(5-g)}</span></span>`; };
 
 // 色は選択中の企業の並び順で割り当てる(12社を超えたら色相をずらして作る)
-const colorAt = i => i < PALETTE.length ? PALETTE[i] : `hsl(${(i * 137.5) % 360}, 60%, 45%)`;
+const colorAt = i => {
+  if (i >= PALETTE.length) return `hsl(${(i * 137.5) % 360}, 60%, ${isDark() ? 62 : 45}%)`;
+  return isDark() && PALETTE[i] === "#4D4D4D" ? "#B5B5B5" : PALETTE[i];   // 濃い灰色は暗い背景で見えないので明るくする
+};
 // 選んだ企業には空いている色番号を割り当て、選択中は同じ色を使い続ける(追加・解除で他社の色が変わらない)
 let colorSlots = {};
 try { colorSlots = JSON.parse(localStorage.getItem("ow-compare-colors")) || {}; } catch(e) {}
@@ -338,16 +403,25 @@ function bestIndex(vals, lower=false){
 }
 function row(label, cs, cell, opts={}){
   const vals = opts.value ? cs.map(opts.value) : null;
-  const best = vals ? bestIndex(vals, opts.lower) : new Set();
-  return `<tr><th class="row">${label}</th>${cs.map((c,i)=>`<td class="${best.has(i)?"best":""}">${cell(c) ?? NA}</td>`).join("")}</tr>`;
+  return {label, cells: cs.map(c=>cell(c) ?? NA), best: vals ? bestIndex(vals, opts.lower) : new Set(), wide: !!opts.wide};
 }
+const companyName = c => `<div class="cname"><span class="dot" style="width:10px;height:10px;border-radius:50%;background:${c.color}"></span>
+    <a href="${esc(c.url||"#")}" target="_blank" rel="noopener">${esc(c.name)}</a></div>`;
 function head(cs){
-  return `<thead><tr><th class="row"></th>${cs.map(c=>`<th><div class="cname"><span class="dot" style="width:10px;height:10px;border-radius:50%;background:${c.color}"></span>
-    <a href="${esc(c.url||"#")}" target="_blank" rel="noopener">${esc(c.name)}</a></div>
+  return `<thead><tr><th class="row"></th>${cs.map(c=>`<th>${companyName(c)}
     <span class="rank">${esc(c.folder)}</span>
     ${c.url?`<a class="owlink" href="${esc(c.url)}" target="_blank" rel="noopener">OWトップ ↗</a>`:""}</th>`).join("")}</tr></thead>`;
 }
-const table = (cs, rows) => `<div class="scroll"><table class="cmp">${head(cs)}<tbody>${rows.join("")}</tbody></table></div>`;
+// スマホ幅では行と列を入れ替える(行が企業、列が項目)
+const narrow = matchMedia("(max-width:760px)");
+function table(cs, rows){
+  const td = (r, i) => `<td class="${[r.best.has(i)?"best":"", r.wide?"wide":""].join(" ").trim()}">${r.cells[i]}</td>`;
+  if (narrow.matches){
+    return `<div class="scroll"><table class="cmp tr"><thead><tr><th class="row">企業</th>${rows.map(r=>`<th>${r.label}</th>`).join("")}</tr></thead>
+      <tbody>${cs.map((c,i)=>`<tr><th class="row">${companyName(c)}<span class="rank">${esc(c.rank)}</span></th>${rows.map(r=>td(r, i)).join("")}</tr>`).join("")}</tbody></table></div>`;
+  }
+  return `<div class="scroll"><table class="cmp">${head(cs)}<tbody>${rows.map(r=>`<tr><th class="row">${r.label}</th>${cs.map((c,i)=>td(r, i)).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
 function stars(v){
   const w = Math.max(0, Math.min(5, v)) / 5 * 100;
   return `<span class="stars"><span class="bg">★★★★★</span><span class="fg" style="width:${w}%">★★★★★</span></span>`;
@@ -423,13 +497,13 @@ function radar(cs){
   const hits = [];
   let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" style="max-width:100%;height:auto">`;
   for (let lv=1; lv<=5; lv++){
-    s += `<polygon points="${SCORE_LABELS.map((_,i)=>pt(i,lv).join(",")).join(" ")}" fill="${lv===5?"#F7FAFC":"none"}" stroke="#DBE4E7"/>`;
+    s += `<polygon points="${SCORE_LABELS.map((_,i)=>pt(i,lv).join(",")).join(" ")}" class="${lv===5?"g5":"g"}" fill="${lv===5?"#F7FAFC":"none"}" stroke="#DBE4E7"/>`;
   }
   SCORE_LABELS.forEach((l,i)=>{
-    const [x,y] = pt(i,5); s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#DBE4E7"/>`;
+    const [x,y] = pt(i,5); s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" class="g" stroke="#DBE4E7"/>`;
     const [lx,ly] = pt(i,5.9);
     const anchor = Math.abs(lx-cx) < 5 ? "middle" : (lx > cx ? "start" : "end");
-    s += `<text x="${lx}" y="${ly+4}" font-size="11.5" fill="#333" text-anchor="${anchor}">${esc(l)}</text>`;
+    s += `<text x="${lx}" y="${ly+4}" font-size="11.5" class="t2" fill="#333" text-anchor="${anchor}">${esc(l)}</text>`;
   });
   // 有効にした典型パターン(点線)
   for (const p of PATTERNS.filter(p=>enabledPatterns.has(p.name))){
@@ -465,16 +539,16 @@ function lineChart(cs){
   const labels = series.length <= 2;                           // 社数が多いときは数値ラベルを省く
   const band = series.length === 1 ? 0.22 : (series.length <= 3 ? 0.13 : 0.07);
   let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" style="max-width:100%;height:auto">`;
-  s += `<text x="${W/2}" y="24" font-size="15" text-anchor="middle" fill="#333">年齢別の推定年収の推移</text>`;
-  s += `<text x="${L-8}" y="${T-22}" font-size="11.5" text-anchor="end" fill="#555">(万円)</text>`;
+  s += `<text x="${W/2}" y="24" font-size="15" text-anchor="middle" class="t2" fill="#333">年齢別の推定年収の推移</text>`;
+  s += `<text x="${L-8}" y="${T-22}" font-size="11.5" text-anchor="end" class="t3" fill="#555">(万円)</text>`;
   for (let v=lo; v<=hi; v+=STEP){
-    s += `<line x1="${L}" x2="${W-Rm}" y1="${y(v)}" y2="${y(v)}" stroke="#D8DEE6"/><text x="${L-8}" y="${y(v)+4}" font-size="12" text-anchor="end" fill="#555">${v}</text>`;
+    s += `<line x1="${L}" x2="${W-Rm}" y1="${y(v)}" y2="${y(v)}" class="g2" stroke="#D8DEE6"/><text x="${L-8}" y="${y(v)+4}" font-size="12" text-anchor="end" class="t3" fill="#555">${v}</text>`;
   }
   // 横軸(区切りの目盛りと年齢)
-  s += `<line x1="${L}" x2="${W-Rm}" y1="${y(lo)}" y2="${y(lo)}" stroke="#AFC2D6"/>`;
-  for (let i=0; i<=ages.length; i++){ const tx = L + slot*i; s += `<line x1="${tx}" x2="${tx}" y1="${y(lo)}" y2="${y(lo)+8}" stroke="#AFC2D6"/>`; }
-  ages.forEach(a=>{ s += `<text x="${x(a)}" y="${H-16}" font-size="12" text-anchor="middle" fill="#555">${a}</text>`; });
-  s += `<text x="${W-Rm+6}" y="${H-16}" font-size="12" fill="#555">(歳)</text>`;
+  s += `<line x1="${L}" x2="${W-Rm}" y1="${y(lo)}" y2="${y(lo)}" class="ax" stroke="#AFC2D6"/>`;
+  for (let i=0; i<=ages.length; i++){ const tx = L + slot*i; s += `<line x1="${tx}" x2="${tx}" y1="${y(lo)}" y2="${y(lo)+8}" class="ax" stroke="#AFC2D6"/>`; }
+  ages.forEach(a=>{ s += `<text x="${x(a)}" y="${H-16}" font-size="12" text-anchor="middle" class="t3" fill="#555">${a}</text>`; });
+  s += `<text x="${W-Rm+6}" y="${H-16}" font-size="12" class="t3" fill="#555">(歳)</text>`;
   // ばらつき(推定範囲)の帯
   for (const c of series){
     const pts = c.age_salary.filter(p=>p.range);
@@ -487,9 +561,9 @@ function lineChart(cs){
     const pts = c.age_salary.filter(p=>p.salary!=null);
     s += `<polyline points="${pts.map(p=>x(p.age)+","+y(p.salary)).join(" ")}" fill="none" stroke="${c.color}" stroke-width="2.5"/>`;
     pts.forEach(p=>{
-      s += `<circle cx="${x(p.age)}" cy="${y(p.salary)}" r="5" fill="${c.color}" stroke="#fff" stroke-width="1.5"/>`;
+      s += `<circle cx="${x(p.age)}" cy="${y(p.salary)}" r="5" fill="${c.color}" class="pt" stroke="#fff" stroke-width="1.5"/>`;
       hits.push(hit(x(p.age), y(p.salary), c.name, c.color, `${p.age}歳　${fmt(p.salary)}万円`, p.range?`推定範囲 ${fmt(p.range[0])}〜${fmt(p.range[1])}万円`:""));
-      if (labels) s += `<text x="${x(p.age)}" y="${y(p.salary)-11}" font-size="13" font-weight="bold" text-anchor="middle" fill="#222" paint-order="stroke" stroke="#fff" stroke-width="3">${Math.round(p.salary)}万</text>`;
+      if (labels) s += `<text x="${x(p.age)}" y="${y(p.salary)-11}" font-size="13" font-weight="bold" text-anchor="middle" class="lbl" fill="#222" paint-order="stroke" stroke="#fff" stroke-width="3">${Math.round(p.salary)}万</text>`;
     });
   }
   return s + hits.join("") + "</svg>";
@@ -502,8 +576,9 @@ function render(){
   const byFolder = Object.fromEntries(DATA.map(c=>[c.folder, c]));
   const cs = [...selected].map(f=>byFolder[f]).filter(Boolean);
   document.getElementById("sub").textContent = `${cs.length} / ${DATA.length} 社を表示中`;
+  document.getElementById("listCount").textContent = `(${cs.length}社)`;
   const main = document.getElementById("main");
-  if (!cs.length){ main.innerHTML = '<div class="empty">左の一覧から比較したい企業を選んでください。</div>'; return; }
+  if (!cs.length){ main.innerHTML = '<div class="empty">企業一覧から比較したい企業を選んでください。</div>'; return; }
 
   // 基本
   const basic = table(cs, [
@@ -631,11 +706,32 @@ function render(){
   <section class="section"><h2>年齢別の推定年収</h2>
     <div class="charts">${lineChart(cs)}${legend(cs.filter(c=>c.age_salary&&c.age_salary.length))}</div>
     ${ageRows.length?table(cs, ageRows):""}</section>
-  <section class="section"><h2>職種別の平均年収</h2>${table(cs,[row("職種別", cs, jobCell)])}</section>
-  <section class="section"><h2>クチコミAI要約 <small>直近2年間のクチコミから OW が生成</small></h2>${table(cs,[row("トピック", cs, aiCell)])}</section>
+  <section class="section"><h2>職種別の平均年収</h2>${table(cs,[row("職種別", cs, jobCell, {wide:true})])}</section>
+  <section class="section"><h2>クチコミAI要約 <small>直近2年間のクチコミから OW が生成</small></h2>${table(cs,[row("トピック", cs, aiCell, {wide:true})])}</section>
   ${locSection}
   ${finSection}`;
 }
+
+/* ---------- スマホの企業一覧(開閉)とテーマ切り替え ---------- */
+const listBtn = document.getElementById("listBtn");
+listBtn.onclick = ()=>{
+  const open = document.body.classList.toggle("list-open");
+  listBtn.setAttribute("aria-expanded", open);
+  listBtn.lastChild.textContent = open ? " ▴" : " ▾";
+};
+const themeBtn = document.getElementById("themeBtn");
+function showThemeBtn(){
+  // 押すと切り替わる先を表示する
+  themeBtn.innerHTML = isDark() ? "☀️ <span>ライト</span>" : "🌙 <span>ダーク</span>";
+}
+themeBtn.onclick = ()=>{
+  const t = isDark() ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("ow-theme", t); } catch(e) {}
+  applyThemeColors(); showThemeBtn(); render();
+};
+showThemeBtn();
+narrow.addEventListener("change", render);   // PC幅とスマホ幅をまたいだら表を組み直す
 
 render();
 </script>
