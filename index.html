@@ -36,6 +36,13 @@ header .hright{margin-left:auto;display:flex;align-items:center;gap:8px}
 .iconbtn{border:1px solid var(--line);background:var(--surface);color:var(--text2);border-radius:18px;height:32px;min-width:32px;padding:0 10px;font:inherit;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .iconbtn:hover{background:var(--bg-light)}
 #listBtn{display:none}
+/* PC幅: 左の企業一覧の表示/最小化 */
+#sideBtn{border:none;padding:0;width:34px;height:34px;justify-content:center;margin-left:-8px;color:var(--gray)}
+#sideBtn .msym{width:22px;height:22px}
+#sideBtn .ic-open{display:none}
+:root[data-side="collapsed"] #sideBtn .ic-open{display:block}
+:root[data-side="collapsed"] #sideBtn .ic-close{display:none}
+@media (min-width:761px){ :root[data-side="collapsed"] aside{display:none} }
 /* アイコンは Google Material Symbols (Outlined) の SVG を埋め込み */
 .msym{width:18px;height:18px;fill:currentColor;flex-shrink:0}
 .themesw{display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;color:var(--gray)}
@@ -171,6 +178,7 @@ svg .pt{stroke:var(--surface)}
   header .sub{display:none}
   header .logo{font-size:16px}
   #listBtn{display:inline-flex}
+  #sideBtn{display:none}
   .layout{display:block}
   /* 企業一覧は画面いっぱいのポップアップ(外枠との余白 8px) */
   aside{display:none;position:fixed;inset:8px;width:auto;height:auto;z-index:40;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px var(--shadow);padding:0 14px 14px}
@@ -191,11 +199,13 @@ svg .pt{stroke:var(--surface)}
 <script>
 // テーマ(ライト/ダーク)を描画前に決める。初期値はライト。保存した選択があればそれを使う
 (function(){ let t = null; try { t = localStorage.getItem("ow-theme"); } catch(e) {}
-  document.documentElement.dataset.theme = t === "dark" ? "dark" : "light"; })();
+  document.documentElement.dataset.theme = t === "dark" ? "dark" : "light";
+  let s = null; try { s = localStorage.getItem("ow-side"); } catch(e) {}
+  if (s === "collapsed") document.documentElement.dataset.side = "collapsed"; })();
 </script>
 </head>
 <body>
-<header><span class="logo">OW 企業比較</span><span class="sub" id="sub"></span>
+<header><button class="iconbtn" id="sideBtn" aria-controls="side" aria-expanded="true" title="企業一覧の表示 / 最小化"><svg class="msym ic-close" viewBox="0 -960 960 960" aria-hidden="true"><path d="M660-320v-320L500-480l160 160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm120-80v-560H200v560h120Zm80 0h360v-560H400v560Zm-80 0H200h120Z"/></svg><svg class="msym ic-open" viewBox="0 -960 960 960" aria-hidden="true"><path d="M500-640v320l160-160-160-160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm120-80v-560H200v560h120Zm80 0h360v-560H400v560Zm-80 0H200h120Z"/></svg></button><span class="logo">OW 企業比較</span><span class="sub" id="sub"></span>
   <div class="hright">
     <button class="iconbtn" id="listBtn" aria-expanded="false" aria-controls="side">企業一覧 <span id="listCount"></span></button>
     <label class="themesw" title="ライト / ダーク"><svg class="msym sun" viewBox="0 -960 960 960" aria-hidden="true"><path d="M565-395q35-35 35-85t-35-85q-35-35-85-35t-85 35q-35 35-35 85t35 85q35 35 85 35t85-35Zm-226.5 56.5Q280-397 280-480t58.5-141.5Q397-680 480-680t141.5 58.5Q680-563 680-480t-58.5 141.5Q563-280 480-280t-141.5-58.5ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Zm326-268Z"/></svg><input type="checkbox" id="themeSw" role="switch" aria-label="ダークモード"><span class="sw"></span><svg class="msym moon" viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z"/></svg></label>
@@ -751,6 +761,20 @@ themeSw.onchange = ()=>{
   document.documentElement.dataset.theme = t;
   try { localStorage.setItem("ow-theme", t); } catch(e) {}
   applyThemeColors(); render();
+};
+// PC幅: 企業一覧の表示/最小化(端末ごとに記憶)
+const sideBtn = document.getElementById("sideBtn");
+function setSide(collapsed){
+  if (collapsed) document.documentElement.dataset.side = "collapsed";
+  else delete document.documentElement.dataset.side;
+  sideBtn.setAttribute("aria-expanded", !collapsed);
+  sideBtn.setAttribute("aria-label", collapsed ? "企業一覧を表示" : "企業一覧を最小化");
+}
+setSide(document.documentElement.dataset.side === "collapsed");
+sideBtn.onclick = ()=>{
+  const c = document.documentElement.dataset.side !== "collapsed";
+  setSide(c);
+  try { localStorage.setItem("ow-side", c ? "collapsed" : "open"); } catch(e) {}
 };
 narrow.addEventListener("change", render);   // PC幅とスマホ幅をまたいだら表を組み直す
 
