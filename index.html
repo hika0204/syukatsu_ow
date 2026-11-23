@@ -113,7 +113,7 @@ td.best .num,td.best .big{color:var(--blue)}
 .stars{position:relative;display:inline-block;font-size:16px;letter-spacing:1px;line-height:1;vertical-align:middle}
 .stars .bg{color:var(--star-off)}
 .stars .fg{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:var(--star)}
-.pct{background:var(--badge);color:#fff;border-radius:30px;padding:1px 10px;font-size:12px;margin-left:6px;white-space:nowrap}
+.pct{background:var(--badge);color:#fff;border-radius:30px;padding:8px 10px;font-size:12px;margin-left:6px;white-space:nowrap}
 .meter{height:8px;background:var(--bg-light2);border-radius:4px;margin-top:4px;overflow:hidden}
 .meter>div{height:100%;background:var(--bar)}
 .meter10{position:relative;height:8px;background:var(--track);margin-top:6px}
@@ -502,7 +502,7 @@ function capText(v){
   return n >= 10000 ? `${Math.floor(n/10000)}兆${fmt2(n%10000)}億円` : `${fmt2(n)}億円`;
 }
 
-const mapLink = c => c.office && c.office.map ? ` <a class="maplink" href="${esc(c.office.map)}" target="_blank" rel="noopener">📍 地図 ↗</a>` : "";
+const mapLink = c => c.office && c.office.map ? ` <a class="maplink" href="${esc(c.office.map)}" target="_blank" rel="noopener">地図 ↗</a>` : "";
 
 /* ---------- ホバーで出すポップアップ ---------- */
 // 点の上に重ねる透明な当たり判定。data-* の内容をポップアップに出す
@@ -724,7 +724,7 @@ function render(){
     }),
     row("営業利益率", cs, c=>fv(c, F(c) && F(c).op_margin)),
     row("自己資本比率", cs, c=>fv(c, F(c) && F(c).equity_ratio)),
-    row("営業キャッシュフロー", cs, c=>{ const v = F(c) && F(c).op_cf; if (!v || v==="—") return null;
+    row("営業CF", cs, c=>{ const v = F(c) && F(c).op_cf; if (!v || v==="—") return null;
       return fv(c, /米ドル/.test(v) ? v : v + "億円"); }),
     row("対象・決算期", cs, c=>F(c) ? esc(F(c).target) : null),
     row("出典・留意点", cs, c=>{
